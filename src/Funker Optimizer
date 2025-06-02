@@ -1,0 +1,201 @@
+'''
+MIT License
+
+Copyright (c) 2025 MTGC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+'''
+
+import os
+import tkinter as tk
+from tkinter import filedialog, messagebox
+import xml.etree.ElementTree as ET
+from PIL import Image
+
+class FunkerOptimizer:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Funker' Optimizer")
+
+        self.division_number = 2
+
+        self.input_label = tk.Label(root, text="Input Data File:")
+        self.input_label.grid(row=0, column=0, padx=5, pady=5, sticky="e")
+        self.input_entry = tk.Entry(root, width=50)
+        self.input_entry.grid(row=0, column=1, padx=5, pady=5)
+        self.input_button = tk.Button(root, text="Browse", command=self.browse_input)
+        self.input_button.grid(row=0, column=2, padx=5, pady=5)
+
+        self.output_label = tk.Label(root, text="Output Data File:")
+        self.output_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+        self.output_entry = tk.Entry(root, width=50)
+        self.output_entry.grid(row=1, column=1, padx=5, pady=5)
+        self.output_button = tk.Button(root, text="Browse", command=self.browse_output)
+        self.output_button.grid(row=1, column=2, padx=5, pady=5)
+
+        self.convert_button = tk.Button(root, text="Modify", command=self.modify)
+        self.convert_button.grid(row=2, column=1, pady=10)
+
+        self.message_text = tk.Text(root, height=8, width=70, state='disabled')
+        self.message_text.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
+
+        self.right_frame = tk.Frame(root, relief=tk.RIDGE, borderwidth=2)
+        self.right_frame.grid(row=0, column=3, rowspan=4, padx=5, pady=5, sticky="n")
+
+        self.image = None
+        self.image_label = None
+
+        self.load_image_button = tk.Button(self.right_frame, text="Load Image", command=self.browse_image)
+        self.load_image_button.grid(row=0, column=0, padx=5, pady=(20,5))
+
+        self.resize_button = tk.Button(self.right_frame, text="Resize", command=self.resize)
+        self.resize_button.grid(row=1, column=0, padx=5, pady=(20,5))
+
+    def browse_input(self):
+        file_path = filedialog.askopenfilename(
+            title="Select Input Data File",
+            filetypes=[("XML files", "*.xml"), ("All files", "*.*")]
+        )
+        if file_path:
+            self.input_entry.delete(0, tk.END)
+            self.input_entry.insert(0, file_path)
+
+    def browse_output(self):
+        file_path = filedialog.asksaveasfilename(
+            title="Select Output Data File",
+            defaultextension=".xml",
+            filetypes=[("XML files", "*.xml"), ("All files", "*.*")]
+        )
+        if file_path:
+            self.output_entry.delete(0, tk.END)
+            self.output_entry.insert(0, file_path)
+
+    def modify(self):
+        input_path = self.input_entry.get()
+        output_path = self.output_entry.get()
+
+        if not input_path or not os.path.isfile(input_path):
+            messagebox.showerror("Error", "Please select a valid input data file.")
+            return
+        if not output_path:
+            messagebox.showerror("Error", "Please select a valid output data file path.")
+            return
+
+        try:
+            tree = ET.parse(input_path)
+            root = tree.getroot()
+
+            for teste in tree.iter('SubTexture'):
+                x = teste.get('x')
+                y = teste.get('y')
+                width = teste.get('width')
+                height = teste.get('height')
+                fX = teste.get('frameX')
+                fY = teste.get('frameY')
+                fW = teste.get('frameWidth')
+                fH = teste.get('frameHeight')
+
+                if x is not None:
+                    teste.set('x', str(int(x) // self.division_number))
+                if y is not None:
+                    teste.set('y', str(int(y) // self.division_number))
+                if width is not None:
+                    teste.set('width', str(int(width) // self.division_number))
+                if height is not None:
+                    teste.set('height', str(int(height) // self.division_number))
+                if fX is not None:
+                    teste.set('frameX', str(int(fX) // self.division_number))
+                if fY is not None:
+                    teste.set('frameY', str(int(fY) // self.division_number))
+                if fW is not None:
+                    teste.set('frameWidth', str(int(fW) // self.division_number))
+                if fH is not None:
+                    teste.set('frameHeight', str(int(fH) // self.division_number))
+
+            tree.write(output_path, encoding='utf-8', xml_declaration=True)
+
+            if os.path.exists(output_path):
+                self.show_message(f"Modified Successfully.\nINPUT='{os.path.abspath(input_path)}'\nOUTPUT='{os.path.abspath(output_path)}'")
+            else:
+                self.show_message("Error: Output file was not created.")
+
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred:\n{e}")
+
+    def show_message(self, message):
+        self.message_text.config(state='normal')
+        self.message_text.delete(1.0, tk.END)
+        self.message_text.insert(tk.END, message)
+        self.message_text.config(state='disabled')
+
+    def browse_image(self):
+        file_path = filedialog.askopenfilename(
+            title="Select Image File",
+            filetypes=[("Image files", "*.png"), ("All files", "*.*")]
+        )
+        if file_path:
+            self.image = Image.open(file_path)
+
+            if self.image_label:
+                self.image_label.destroy()
+                self.image_label = None
+            
+            file_name = os.path.basename(file_path)
+            
+            self.image_label = tk.Label(self.right_frame, text=f"File: {file_name}")
+            self.image_label.grid(row=2, column=0, padx=5, pady=(20,5))
+
+    def resize(self):
+        if hasattr(self, 'image') and self.image:
+            percentage_str = tk.simpledialog.askstring("Resize Image", "Enter resize percentage (e.g. 50):")
+            if percentage_str is None:
+                return
+            try:
+                percentage = float(percentage_str)
+                if percentage <= 0:
+                    raise ValueError("Percentage must be positive.")
+            except Exception as e:
+                messagebox.showerror("Invalid Input", f"Please enter a valid positive number.\n{e}")
+                return
+
+            original_width, original_height = self.image.size
+            new_width = int(original_width * (percentage / 100))
+            new_height = int(original_height * (percentage / 100))
+            new_size = (new_width, new_height)
+
+            self.image = self.image.resize(new_size, Image.Resampling.LANCZOS)
+            
+            save_path = filedialog.asksaveasfilename(
+                title="Save Resized Image",
+                defaultextension=".png",
+                filetypes=[("PNG files", "*.png"), ("All files", "*.*")]
+            )
+            if save_path:
+                try:
+                    self.image.save(save_path)
+                    self.show_message(f"Resized image saved successfully:\n{save_path}")
+                except Exception as e:
+                    messagebox.showerror("Error", f"Failed to save image:\n{e}")
+        else:
+            messagebox.showwarning("Warning", "No image loaded to resize.")
+
+if __name__ == '__main__':
+    root = tk.Tk()
+    app = FunkerOptimizer(root)
+    root.mainloop()
