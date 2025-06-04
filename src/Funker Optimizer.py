@@ -57,7 +57,7 @@ class FunkerOptimizer:
         self.github_button.grid(row=2, column=2, pady=10, padx=(10,0))
 
         self.bug_report_button = tk.Button(root, text="Bug Report", command=self.bug_report)
-        self.bug_report_button = tk.Button(row=2, columm=2, pady=10, padx=(10,0)
+        self.bug_report_button.grid(row=1, column=2, pady=10, padx=(10,0))
 
         self.message_text = tk.Text(root, height=8, width=70, state='disabled')
         self.message_text.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
@@ -202,7 +202,7 @@ class FunkerOptimizer:
         else:
             messagebox.showwarning("Warning", "No image loaded to resize.")
 
-    def open_github(self):
+    def open_github_repo(self):
         url = "https://github.com/sirthegamercoder/Funker-Optimizer"
         webbrowser.open(url)
 
