@@ -53,8 +53,11 @@ class FunkerOptimizer:
         self.convert_button = tk.Button(root, text="Modify", command=self.modify)
         self.convert_button.grid(row=2, column=1, pady=10)
 
-        self.github_button = tk.Button(root, text="GitHub", command=self.open_github)
+        self.github_button = tk.Button(root, text="GitHub Repo", command=self.open_github_repo)
         self.github_button.grid(row=2, column=2, pady=10, padx=(10,0))
+
+        self.bug_report_button = tk.Button(root, text="Bug Report", command=self.bug_report)
+        self.bug_report_button = tk.Button(row=2, columm=2, pady=10, padx=(10,0)
 
         self.message_text = tk.Text(root, height=8, width=70, state='disabled')
         self.message_text.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
@@ -201,6 +204,10 @@ class FunkerOptimizer:
 
     def open_github(self):
         url = "https://github.com/sirthegamercoder/Funker-Optimizer"
+        webbrowser.open(url)
+
+    def bug_report(self):
+        url = "https://github.com/sirthegamercoder/Funker-Optimizer/issues"
         webbrowser.open(url)
 
 if __name__ == '__main__':
