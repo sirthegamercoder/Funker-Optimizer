@@ -27,6 +27,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import xml.etree.ElementTree as ET
 from PIL import Image
+import webbrowser
 
 class FunkerOptimizer:
     def __init__(self, root):
@@ -51,6 +52,9 @@ class FunkerOptimizer:
 
         self.convert_button = tk.Button(root, text="Modify", command=self.modify)
         self.convert_button.grid(row=2, column=1, pady=10)
+
+        self.github_button = tk.Button(root, text="GitHub", command=self.open_github)
+        self.github_button.grid(row=2, column=2, pady=10, padx=(10,0))
 
         self.message_text = tk.Text(root, height=8, width=70, state='disabled')
         self.message_text.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
@@ -194,6 +198,10 @@ class FunkerOptimizer:
                     messagebox.showerror("Error", f"Failed to save image:\n{e}")
         else:
             messagebox.showwarning("Warning", "No image loaded to resize.")
+
+    def open_github(self):
+        url = "https://github.com/sirthegamercoder/Funker-Optimizer"
+        webbrowser.open(url)
 
 if __name__ == '__main__':
     root = tk.Tk()
