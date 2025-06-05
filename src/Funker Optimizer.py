@@ -35,6 +35,7 @@ class FunkerOptimizer:
         self.root = root
         self.root.title("Funker' Optimizer")
         self.root.iconbitmap(sys.executable)
+        self.root.geometry("680x280")
 
         self.division_number = 2
 
