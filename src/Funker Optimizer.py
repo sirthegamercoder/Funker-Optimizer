@@ -48,7 +48,7 @@ class FunkerOptimizer:
         self.output_entry = tk.Entry(root, width=50)
         self.output_entry.grid(row=1, column=1, padx=5, pady=5)
         self.output_button = tk.Button(root, text="Browse", command=self.browse_output)
-        self.output_button.grid(row=1, column=2, padx=10, pady=5)
+        self.output_button.grid(row=1, column=2, padx=5, pady=5)
 
         self.convert_button = tk.Button(root, text="Modify", command=self.modify)
         self.convert_button.grid(row=2, column=1, pady=10)
