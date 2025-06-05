@@ -23,6 +23,7 @@ SOFTWARE.
 '''
 
 import os
+import sys
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import xml.etree.ElementTree as ET
@@ -33,6 +34,7 @@ class FunkerOptimizer:
     def __init__(self, root):
         self.root = root
         self.root.title("Funker' Optimizer")
+        self.root.iconbitmap(sys.executable)
 
         self.division_number = 2
 
