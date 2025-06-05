@@ -48,7 +48,7 @@ class FunkerOptimizer:
         self.output_entry = tk.Entry(root, width=50)
         self.output_entry.grid(row=1, column=1, padx=5, pady=5)
         self.output_button = tk.Button(root, text="Browse", command=self.browse_output)
-        self.output_button.grid(row=1, column=2, padx=5, pady=5)
+        self.output_button.grid(row=1, column=2, padx=10, pady=5)
 
         self.convert_button = tk.Button(root, text="Modify", command=self.modify)
         self.convert_button.grid(row=2, column=1, pady=10)
@@ -57,7 +57,7 @@ class FunkerOptimizer:
         self.github_button.grid(row=2, column=2, pady=10, padx=(10,0))
 
         self.bug_report_button = tk.Button(root, text="Bug Report", command=self.bug_report)
-        self.bug_report_button.grid(row=1, column=2, pady=10, padx=(10,0))
+        self.bug_report_button.grid(row=2, column=1, pady=10, padx=(300,0))
 
         self.message_text = tk.Text(root, height=8, width=70, state='disabled')
         self.message_text.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
