@@ -59,3 +59,9 @@ After you have done the setup you should now need the following for this tool :
 3. Type `python` with space then open File Explorer and find directory where the `.py` file is located
 4. Drag the `.py` file into Terminal/CMD and enter
 5. Do steps 5-14 of the first method
+
+# Trivia
+- Actually the name Funker' Optimizer is inspired from the name of [Funkin' Optimizer](https://github.com/WhiteNinja00/Funkin-Optimizer) by [WhiteNinja00](https://github.com/WhiteNinja00)
+  - The reason I made this tool is because one of the feature is where can crop spritesheet but drawback is can increase file size so I decided to make a tool with adding a feature resize the image also reduce file size
+- Funker' Optimizer was originally is Divider XML PC which has unfortunately been removed since February 27th
+- Funker' Optimizer application icon is also inspired by Funkin' Optimizer application icon, except that the letters are combined and shaded
