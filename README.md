@@ -24,7 +24,7 @@ After you have done the setup you should now need the following for this tool :
 
 5. Click on the browse button of `Input Data File :`
 6. Find the directory where the `.xml` file is located and click then open it
-7. Do the same by clicking the browse button of `Output Data File :` and find the directory and click on `.xml` file then open it
+7. Do the same by clicking the browse button of `Output Data File :` and find the directory and click on `.xml` file then save it
 > [!TIP]
 > If you are asked to replace it like massage `Do you want to replace it?` just click `Yes`
 
