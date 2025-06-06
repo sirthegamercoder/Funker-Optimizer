@@ -10,6 +10,8 @@ Before you run this tool please download `setup-windows.bat` and `requirements.t
 After you have done the setup you should now need the following for this tool :
 * A Portable Network Graphics `.png` file
 * A Extensible Markup Language `.xml` file
+> [!NOTE]
+> The `.xml` file must be in Starling/Sparrow format under `TextureAtlas imagePath=` there will be a green text saying `Created with` (expect Spritesheet and XML Generator) and at the bottom of the `Created with` (expect Spritesheet and XML Generator) text there is a link some examples is Adobe Animate, Spritesheet and XML Generator and Funkin Packer
 
 ## Installation
 ### Method 1 : (Standard Install)
