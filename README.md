@@ -43,7 +43,11 @@ After you have done the setup you should now need the following for this tool :
 > [!CAUTION]
 > DO NOT ENTER A PERCENTAGE NUMBER OF MORE THAN 50 THIS HAS BEEN EXPLAINED IN `ReadMe.txt` on `art` folder
 
-14. Wait for a message to appear that reads `Resized image saved successfully:` and close the tool
+14. Click on image file and save it
+> [!TIP]
+> If you are asked to replace it like massage `Do you want to replace it?` just click `Yes`
+
+15. Wait for a message to appear that reads `Resized image saved successfully:` and close the tool
 > [!WARNING]
 > Conversely, after entering the percentage number, an error & warning message will appear that reads `Failed to save image:` or `No image loaded to resize.`
 
@@ -58,7 +62,7 @@ After you have done the setup you should now need the following for this tool :
 
 3. Type `python` with space then open File Explorer and find directory where the `.py` file is located
 4. Drag the `.py` file into Terminal/CMD and enter
-5. Do steps 5-14 of the first method
+5. Do steps 5-15 of the first method
 
 # Trivia
 - Actually the name Funker' Optimizer is inspired from the name of [Funkin' Optimizer](https://github.com/WhiteNinja00/Funkin-Optimizer) by [WhiteNinja00](https://github.com/WhiteNinja00)
