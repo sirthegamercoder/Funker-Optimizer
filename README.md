@@ -69,3 +69,8 @@ After you have done the setup you should now need the following for this tool :
   - The reason I made this tool is because one of the feature is where can crop spritesheet but drawback is can increase file size so I decided to make a tool with adding a feature resize the image also reduce file size
 - Funker' Optimizer was originally is Divider XML PC which has unfortunately been removed since February 27th
 - Funker' Optimizer application icon is also inspired by Funkin' Optimizer application icon, except that the letters are combined and shaded
+
+## Alternative Download
+### GameBanana
+
+<a href="https://gamebanana.com/tools/19963"><img src="https://gamebanana.com/tools/embeddables/19963?type=large"/></a>
