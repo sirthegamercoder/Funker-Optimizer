@@ -1,0 +1,10 @@
+name: Bug report
+description: Report a bug with tool here
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe the bug here. (Must be detailed)"
+    validations:
+      required: true
