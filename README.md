@@ -48,6 +48,9 @@ After you have done the setup you should now need the following for this tool :
 > If you are asked to replace it like massage `Do you want to replace it?` just click `Yes`
 
 15. Wait for a message to appear that reads `Resized image saved successfully:` and close the tool
+> [!NOTE]
+> Before you close this tool you can press the SSAXMLG button which will redirect to the FNF Spritesheet and XML Generator Web and then close the tool
+
 > [!WARNING]
 > Conversely, after entering the percentage number, an error & warning message will appear that reads `Failed to save image:` or `No image loaded to resize.`
 
@@ -69,6 +72,7 @@ After you have done the setup you should now need the following for this tool :
   - The reason I made this tool is because one of the feature is where can crop spritesheet but drawback is can increase file size so I decided to make a tool with adding a feature resize the image also reduce file size
 - Funker' Optimizer was originally is Divider XML PC which has unfortunately been removed since February 27th
 - Funker' Optimizer application icon is also inspired by Funkin' Optimizer application icon, except that the letters are combined and shaded
+- The name of the SSAXMLG button was originally named Spritesheet and XML Generator but because the button name is long and can close other buttons, the button name is shortened so that it cannot close other buttons
 
 ## Alternative Download
 ### GameBanana
