@@ -68,7 +68,10 @@ class FunkerOptimizer:
         self.github_button.grid(row=2, column=2, pady=10, padx=(10,0))
 
         self.bug_report_button = tk.Button(root, text="Bug Report", command=self.bug_report)
-        self.bug_report_button.grid(row=2, column=1, pady=10, padx=(300,0))
+        self.bug_report_button.grid(row=2, column=1, pady=10, padx=(303,0))
+
+        self.spritesheet_and_xml_generator_button = tk.Button(root, text="SSAXMLG", command=self.spritesheet_and_xml_generator)
+        self.spritesheet_and_xml_generator_button.grid(row=2, column=1, columnspan=2, pady=10, padx=(50,0))
 
         self.message_text = tk.Text(root, height=8, width=70, state='disabled')
         self.message_text.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
@@ -219,6 +222,10 @@ class FunkerOptimizer:
 
     def bug_report(self):
         url = "https://github.com/sirthegamercoder/Funker-Optimizer/issues"
+        webbrowser.open(url)
+
+    def spritesheet_and_xml_generator(self):
+        url = "https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web/"
         webbrowser.open(url)
 
 if __name__ == '__main__':
