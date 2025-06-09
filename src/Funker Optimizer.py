@@ -38,7 +38,7 @@ class FunkerOptimizer:
         self.root.resizable(0, 0)
 
         window_width = 730
-        window_height = 280
+        window_height = 260
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         x_screen = int((screen_width / 2) - (window_width / 2))
