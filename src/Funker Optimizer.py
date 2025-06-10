@@ -29,6 +29,7 @@ from tkinter import filedialog, messagebox
 import xml.etree.ElementTree as ET
 from PIL import Image
 import webbrowser
+import winreg
 
 class FunkerOptimizer:
     def __init__(self, root):
@@ -87,6 +88,57 @@ class FunkerOptimizer:
 
         self.resize_button = tk.Button(self.right_frame, text="Resize", command=self.resize)
         self.resize_button.grid(row=1, column=0, padx=5, pady=(20,5))
+
+        self.apply_system_theme()
+
+    def detect_system_theme(self):
+        try:
+            registry = winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER)
+            key_path = r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
+            key = winreg.OpenKey(registry, key_path)
+            value, _ = winreg.QueryValueEx(key, "AppsUseLightTheme")
+            winreg.CloseKey(key)
+            return "light" if value == 1 else "dark"
+        except Exception:
+            return "light"
+
+    def apply_system_theme(self):
+        theme = self.detect_system_theme()
+        if theme == "dark":
+            bg_color = "#2e2e2e"
+            fg_color = "#ffffff"
+            entry_bg = "#3c3f41"
+            button_bg = "#444444"
+        else:
+            bg_color = "#f0f0f0"
+            fg_color = "#000000"
+            entry_bg = "#ffffff"
+            button_bg = "#e0e0e0"
+
+        self.root.configure(bg=bg_color)
+
+        widgets = [
+            self.input_label, self.input_entry, self.input_button,
+            self.output_label, self.output_entry, self.output_button,
+            self.convert_button, self.github_button, self.bug_report_button,
+            self.spritesheet_and_xml_generator_button, self.message_text,
+            self.right_frame, self.load_image_button, self.resize_button
+        ]
+
+        for widget in widgets:
+            if isinstance(widget, tk.Label):
+                widget.configure(bg=bg_color, fg=fg_color)
+            elif isinstance(widget, tk.Entry):
+                widget.configure(bg=entry_bg, fg=fg_color, insertbackground=fg_color)
+            elif isinstance(widget, tk.Button):
+                widget.configure(bg=button_bg, fg=fg_color, activebackground=button_bg)
+            elif isinstance(widget, tk.Text):
+                widget.configure(bg=entry_bg, fg=fg_color, insertbackground=fg_color)
+            elif isinstance(widget, tk.Frame):
+                widget.configure(bg=bg_color)
+
+        if self.image_label:
+            self.image_label.configure(bg=bg_color, fg=fg_color)
 
     def browse_input(self):
         file_path = filedialog.askopenfilename(
