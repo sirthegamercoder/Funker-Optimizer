@@ -26,6 +26,7 @@ import os
 import sys
 import tkinter as tk
 from tkinter import filedialog, messagebox
+import tkinter.simpledialog
 import xml.etree.ElementTree as ET
 from PIL import Image
 import webbrowser
@@ -38,7 +39,7 @@ class FunkerOptimizer:
         self.root.iconbitmap(sys.executable)
         self.root.resizable(0, 0)
 
-        window_width = 730
+        window_width = 830
         window_height = 260
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
@@ -62,8 +63,8 @@ class FunkerOptimizer:
         self.output_button = tk.Button(root, text="Browse", command=self.browse_output)
         self.output_button.grid(row=1, column=2, padx=5, pady=5)
 
-        self.convert_button = tk.Button(root, text="Modify", command=self.modify)
-        self.convert_button.grid(row=2, column=1, pady=10)
+        self.modify_button = tk.Button(root, text="Modify", command=self.modify)
+        self.modify_button.grid(row=2, column=1, pady=10)
 
         self.github_button = tk.Button(root, text="GitHub Repo", command=self.open_github_repo)
         self.github_button.grid(row=2, column=2, pady=10, padx=(10,0))
@@ -88,6 +89,10 @@ class FunkerOptimizer:
 
         self.resize_button = tk.Button(self.right_frame, text="Resize", command=self.resize)
         self.resize_button.grid(row=1, column=0, padx=5, pady=(20,5))
+
+        self.aliasing_var = tk.BooleanVar(value=True)
+        self.aliasing_checkbox = tk.Checkbutton(self.right_frame, text="Enable Aliasing (Smooth Resize)", variable=self.aliasing_var)
+        self.aliasing_checkbox.grid(row=3, column=0, padx=5, pady=(5,20))
 
         self.apply_system_theme()
 
@@ -120,9 +125,10 @@ class FunkerOptimizer:
         widgets = [
             self.input_label, self.input_entry, self.input_button,
             self.output_label, self.output_entry, self.output_button,
-            self.convert_button, self.github_button, self.bug_report_button,
+            self.modify_button, self.github_button, self.bug_report_button,
             self.spritesheet_and_xml_generator_button, self.message_text,
-            self.right_frame, self.load_image_button, self.resize_button
+            self.right_frame, self.load_image_button, self.resize_button,
+            self.aliasing_checkbox
         ]
 
         for widget in widgets:
@@ -136,6 +142,8 @@ class FunkerOptimizer:
                 widget.configure(bg=entry_bg, fg=fg_color, insertbackground=fg_color)
             elif isinstance(widget, tk.Frame):
                 widget.configure(bg=bg_color)
+            elif isinstance(widget, tk.Checkbutton):
+                widget.configure(bg=bg_color, fg=fg_color, activebackground=button_bg, selectcolor=bg_color)
 
         if self.image_label:
             self.image_label.configure(bg=bg_color, fg=fg_color)
@@ -172,6 +180,14 @@ class FunkerOptimizer:
 
         try:
             tree = ET.parse(input_path)
+        except ET.ParseError as e:
+            messagebox.showerror("Data Parse Error", f"Failed to parse data file:\n{e}")
+            return
+        except Exception as e:
+            messagebox.showerror("Error", f"An unexpected error occurred while parsing data:\n{e}")
+            return
+
+        try:
             root = tree.getroot()
 
             for teste in tree.iter('SubTexture'):
@@ -208,8 +224,10 @@ class FunkerOptimizer:
             else:
                 self.show_message("Error: Output file was not created.")
 
+        except IOError as e:
+            messagebox.showerror("File Error", f"File operation failed:\n{e}")
         except Exception as e:
-            messagebox.showerror("Error", f"An error occurred:\n{e}")
+            messagebox.showerror("Error", f"An unexpected error occurred:\n{e}")
 
     def show_message(self, message):
         self.message_text.config(state='normal')
@@ -223,7 +241,11 @@ class FunkerOptimizer:
             filetypes=[("Image files", "*.png"), ("All files", "*.*")]
         )
         if file_path:
-            self.image = Image.open(file_path)
+            try:
+                self.image = Image.open(file_path)
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to open image file:\n{e}")
+                return
 
             if self.image_label:
                 self.image_label.destroy()
@@ -252,7 +274,16 @@ class FunkerOptimizer:
             new_height = int(original_height * (percentage / 100))
             new_size = (new_width, new_height)
 
-            self.image = self.image.resize(new_size, Image.Resampling.LANCZOS)
+            if self.aliasing_var.get():
+                resample_filter = Image.Resampling.LANCZOS
+            else:
+                resample_filter = Image.Resampling.NEAREST
+
+            try:
+                self.image = self.image.resize(new_size, resample_filter)
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to resize image:\n{e}")
+                return
             
             save_path = filedialog.asksaveasfilename(
                 title="Save Resized Image",
