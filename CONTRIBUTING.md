@@ -1,8 +1,13 @@
-# Procedures for creating issues/pull requests
-This is a step-by-step guide to creating a good issues/pull requests that are acceptable to the owner
+# Procedures for creating issue/pull request
+This is a step-by-step guide to creating a good issue/pull request that are acceptable to the owner
+
+# RULES (Only Pull Request)
+- No vague descriptions of changes in pull requests
+- Include a screenshot/video showing the changes made in the pull request
+- Should explain the changes made in terms of things added and things improved as well as things fixed
 
 ## How to create
-### Issues
+### Issue
 1. Before you do that, make sure you have a screenshot of the bug you found
 2. Go to `Issues` and click `New issue` then select `Bug report`
 3. In `Bug report` enter a title about the bug you encountered
@@ -15,7 +20,7 @@ This is a step-by-step guide to creating a good issues/pull requests that are ac
 > [!NOTE]
 > If you have a question, you can also create an issue and select the question and enter the title of the question and then write a description of some of the questions you are asking
 
-### Pull Requests
+### Pull Request
 1. Press `Fork` and click `Create fork`
 2. After creating the fork repository you can then make changes
 >[!WARNING]
