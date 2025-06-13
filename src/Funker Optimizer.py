@@ -31,6 +31,8 @@ import xml.etree.ElementTree as ET
 from PIL import Image
 import webbrowser
 import winreg
+from tkinter import ttk
+import threading
 
 class FunkerOptimizer:
     def __init__(self, root):
@@ -78,6 +80,10 @@ class FunkerOptimizer:
         self.message_text = tk.Text(root, height=8, width=70, state='disabled')
         self.message_text.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
 
+        self.progress_bar = ttk.Progressbar(root, orient="horizontal", length=700, mode="determinate")
+        self.progress_bar.grid(row=4, column=0, columnspan=3, padx=5, pady=(0,10))
+        self.progress_bar.grid_remove()
+
         self.right_frame = tk.Frame(root, relief=tk.RIDGE, borderwidth=2)
         self.right_frame.grid(row=0, column=3, rowspan=4, padx=5, pady=5, sticky="n")
 
@@ -91,7 +97,7 @@ class FunkerOptimizer:
         self.resize_button.grid(row=1, column=0, padx=5, pady=(20,5))
 
         self.aliasing_var = tk.BooleanVar(value=True)
-        self.aliasing_checkbox = tk.Checkbutton(self.right_frame, text="Enable Aliasing (Smooth Resize)", variable=self.aliasing_var)
+        self.aliasing_checkbox = tk.Checkbutton(self.right_frame, text="Aliasing", variable=self.aliasing_var)
         self.aliasing_checkbox.grid(row=3, column=0, padx=5, pady=(5,20))
 
         self.apply_system_theme()
@@ -168,66 +174,84 @@ class FunkerOptimizer:
             self.output_entry.insert(0, file_path)
 
     def modify(self):
-        input_path = self.input_entry.get()
-        output_path = self.output_entry.get()
+        def task():
+            input_path = self.input_entry.get()
+            output_path = self.output_entry.get()
 
-        if not input_path or not os.path.isfile(input_path):
-            messagebox.showerror("Error", "Please select a valid input data file.")
-            return
-        if not output_path:
-            messagebox.showerror("Error", "Please select a valid output data file path.")
-            return
+            if not input_path or not os.path.isfile(input_path):
+                messagebox.showerror("Error", "Please select a valid input data file.")
+                self.progress_bar.grid_remove()
+                return
+            if not output_path:
+                messagebox.showerror("Error", "Please select a valid output data file path.")
+                self.progress_bar.grid_remove()
+                return
 
-        try:
-            tree = ET.parse(input_path)
-        except ET.ParseError as e:
-            messagebox.showerror("Data Parse Error", f"Failed to parse data file:\n{e}")
-            return
-        except Exception as e:
-            messagebox.showerror("Error", f"An unexpected error occurred while parsing data:\n{e}")
-            return
+            try:
+                tree = ET.parse(input_path)
+            except ET.ParseError as e:
+                messagebox.showerror("Data Parse Error", f"Failed to parse data file:\n{e}")
+                self.progress_bar.grid_remove()
+                return
+            except Exception as e:
+                messagebox.showerror("Error", f"An unexpected error occurred while parsing data:\n{e}")
+                self.progress_bar.grid_remove()
+                return
 
-        try:
-            root = tree.getroot()
+            try:
+                root = tree.getroot()
+                subtextures = list(tree.iter('SubTexture'))
+                total = len(subtextures)
+                self.progress_bar['maximum'] = total
+                self.progress_bar['value'] = 0
+                self.progress_bar.grid()
 
-            for teste in tree.iter('SubTexture'):
-                x = teste.get('x')
-                y = teste.get('y')
-                width = teste.get('width')
-                height = teste.get('height')
-                fX = teste.get('frameX')
-                fY = teste.get('frameY')
-                fW = teste.get('frameWidth')
-                fH = teste.get('frameHeight')
+                for i, teste in enumerate(subtextures):
+                    x = teste.get('x')
+                    y = teste.get('y')
+                    width = teste.get('width')
+                    height = teste.get('height')
+                    fX = teste.get('frameX')
+                    fY = teste.get('frameY')
+                    fW = teste.get('frameWidth')
+                    fH = teste.get('frameHeight')
 
-                if x is not None:
-                    teste.set('x', str(int(x) // self.division_number))
-                if y is not None:
-                    teste.set('y', str(int(y) // self.division_number))
-                if width is not None:
-                    teste.set('width', str(int(width) // self.division_number))
-                if height is not None:
-                    teste.set('height', str(int(height) // self.division_number))
-                if fX is not None:
-                    teste.set('frameX', str(int(fX) // self.division_number))
-                if fY is not None:
-                    teste.set('frameY', str(int(fY) // self.division_number))
-                if fW is not None:
-                    teste.set('frameWidth', str(int(fW) // self.division_number))
-                if fH is not None:
-                    teste.set('frameHeight', str(int(fH) // self.division_number))
+                    if x is not None:
+                        teste.set('x', str(int(x) // self.division_number))
+                    if y is not None:
+                        teste.set('y', str(int(y) // self.division_number))
+                    if width is not None:
+                        teste.set('width', str(int(width) // self.division_number))
+                    if height is not None:
+                        teste.set('height', str(int(height) // self.division_number))
+                    if fX is not None:
+                        teste.set('frameX', str(int(fX) // self.division_number))
+                    if fY is not None:
+                        teste.set('frameY', str(int(fY) // self.division_number))
+                    if fW is not None:
+                        teste.set('frameWidth', str(int(fW) // self.division_number))
+                    if fH is not None:
+                        teste.set('frameHeight', str(int(fH) // self.division_number))
 
-            tree.write(output_path, encoding='utf-8', xml_declaration=True)
+                    self.progress_bar['value'] = i + 1
+                    self.root.update_idletasks()
 
-            if os.path.exists(output_path):
-                self.show_message(f"Modified Successfully.\nINPUT='{os.path.abspath(input_path)}'\nOUTPUT='{os.path.abspath(output_path)}'")
-            else:
-                self.show_message("Error: Output file was not created.")
+                tree.write(output_path, encoding='utf-8', xml_declaration=True)
 
-        except IOError as e:
-            messagebox.showerror("File Error", f"File operation failed:\n{e}")
-        except Exception as e:
-            messagebox.showerror("Error", f"An unexpected error occurred:\n{e}")
+                if os.path.exists(output_path):
+                    self.show_message(f"Modified Successfully.\nINPUT='{os.path.abspath(input_path)}'\nOUTPUT='{os.path.abspath(output_path)}'")
+                else:
+                    self.show_message("Error: Output file was not created.")
+
+            except IOError as e:
+                messagebox.showerror("File Error", f"File operation failed:\n{e}")
+            except Exception as e:
+                messagebox.showerror("Error", f"An unexpected error occurred:\n{e}")
+            finally:
+                self.progress_bar.grid_remove()
+
+        self.progress_bar.grid()
+        threading.Thread(target=task).start()
 
     def show_message(self, message):
         self.message_text.config(state='normal')
@@ -257,47 +281,65 @@ class FunkerOptimizer:
             self.image_label.grid(row=2, column=0, padx=5, pady=(20,5))
 
     def resize(self):
-        if hasattr(self, 'image') and self.image:
-            percentage_str = tk.simpledialog.askstring("Resize Image", "Enter resize percentage (e.g. 50):")
-            if percentage_str is None:
-                return
-            try:
-                percentage = float(percentage_str)
-                if percentage <= 0:
-                    raise ValueError("Percentage must be positive.")
-            except Exception as e:
-                messagebox.showerror("Invalid Input", f"Please enter a valid positive number.\n{e}")
-                return
-
-            original_width, original_height = self.image.size
-            new_width = int(original_width * (percentage / 100))
-            new_height = int(original_height * (percentage / 100))
-            new_size = (new_width, new_height)
-
-            if self.aliasing_var.get():
-                resample_filter = Image.Resampling.LANCZOS
-            else:
-                resample_filter = Image.Resampling.NEAREST
-
-            try:
-                self.image = self.image.resize(new_size, resample_filter)
-            except Exception as e:
-                messagebox.showerror("Error", f"Failed to resize image:\n{e}")
-                return
-            
-            save_path = filedialog.asksaveasfilename(
-                title="Save Resized Image",
-                defaultextension=".png",
-                filetypes=[("PNG files", "*.png"), ("All files", "*.*")]
-            )
-            if save_path:
+        def task():
+            if hasattr(self, 'image') and self.image:
+                percentage_str = tk.simpledialog.askstring("Resize Image", "Enter resize percentage (e.g. 50):")
+                if percentage_str is None:
+                    self.progress_bar.grid_remove()
+                    return
                 try:
-                    self.image.save(save_path)
-                    self.show_message(f"Resized image saved successfully:\n{save_path}")
+                    percentage = float(percentage_str)
+                    if percentage <= 0:
+                        raise ValueError("Percentage must be positive.")
                 except Exception as e:
-                    messagebox.showerror("Error", f"Failed to save image:\n{e}")
-        else:
-            messagebox.showwarning("Warning", "No image loaded to resize.")
+                    messagebox.showerror("Invalid Input", f"Please enter a valid positive number.\n{e}")
+                    self.progress_bar.grid_remove()
+                    return
+
+                original_width, original_height = self.image.size
+                new_width = int(original_width * (percentage / 100))
+                new_height = int(original_height * (percentage / 100))
+                new_size = (new_width, new_height)
+
+                if self.aliasing_var.get():
+                    resample_filter = Image.Resampling.LANCZOS
+                else:
+                    resample_filter = Image.Resampling.NEAREST
+
+                try:
+                    self.progress_bar['maximum'] = 100
+                    self.progress_bar['value'] = 0
+                    self.progress_bar.grid()
+                    for i in range(1, 101):
+                        self.progress_bar['value'] = i
+                        self.root.update_idletasks()
+                        import time
+                        time.sleep(0.01)
+
+                    self.image = self.image.resize(new_size, resample_filter)
+                except Exception as e:
+                    messagebox.showerror("Error", f"Failed to resize image:\n{e}")
+                    self.progress_bar.grid_remove()
+                    return
+                
+                save_path = filedialog.asksaveasfilename(
+                    title="Save Resized Image",
+                    defaultextension=".png",
+                    filetypes=[("PNG files", "*.png"), ("All files", "*.*")]
+                )
+                if save_path:
+                    try:
+                        self.image.save(save_path)
+                        self.show_message(f"Resized image saved successfully:\n{save_path}")
+                    except Exception as e:
+                        messagebox.showerror("Error", f"Failed to save image:\n{e}")
+                self.progress_bar.grid_remove()
+            else:
+                messagebox.showwarning("Warning", "No image loaded to resize.")
+                self.progress_bar.grid_remove()
+
+        self.progress_bar.grid()
+        threading.Thread(target=task).start()
 
     def open_github_repo(self):
         url = "https://github.com/sirthegamercoder/Funker-Optimizer"
