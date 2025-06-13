@@ -1,10 +1,10 @@
 # Procedures for creating issue/pull request
 This is a step-by-step guide to creating a good issue/pull request that are acceptable to the owner
 
-# RULES (Only Pull Request)
+# RULES
 - No vague descriptions of changes in pull requests
 - Include a screenshot/video showing the changes made in the pull request
-- Should explain the changes made in terms of things added and things improved as well as things fixed
+- Should explain the changes made in terms of things added and things improved as well as things fixed in the pull request
 
 ## How to create
 ### Issue
