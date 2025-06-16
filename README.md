@@ -76,6 +76,7 @@ After you have done the setup you should now need the following for this tool :
 
 # Hint
 - You can disable aliasing option if you want resize pixel sprite
+- Make sure choose latest version of thia tool
 
 ## Alternative Download
 ### GameBanana
