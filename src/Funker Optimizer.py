@@ -151,9 +151,6 @@ class FunkerOptimizer:
             elif isinstance(widget, tk.Checkbutton):
                 widget.configure(bg=bg_color, fg=fg_color, activebackground=button_bg, selectcolor=bg_color)
 
-        if self.image_label:
-            self.image_label.configure(bg=bg_color, fg=fg_color)
-
     def browse_input(self):
         file_path = filedialog.askopenfilename(
             title="Select Input Data File",
@@ -278,6 +275,16 @@ class FunkerOptimizer:
             file_name = os.path.basename(file_path)
             
             self.image_label = tk.Label(self.right_frame, text=f"File: {file_name}")
+
+            theme = self.detect_system_theme()
+            if theme == "dark":
+                bg_color = "#2e2e2e"
+                fg_color = "#ffffff"
+            else:
+                bg_color = "#f0f0f0"
+                fg_color = "#000000"
+
+            self.image_label.configure(bg=bg_color, fg=fg_color)
             self.image_label.grid(row=2, column=0, padx=5, pady=(20,5))
 
     def resize(self):
