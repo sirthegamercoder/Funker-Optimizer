@@ -100,8 +100,11 @@ class FunkerOptimizer:
         self.load_image_button = tk.Button(self.right_frame, text="Load Image", command=self.browse_image)
         self.load_image_button.grid(row=0, column=0, padx=5, pady=(20,5))
 
+        self.batch_process_image_button = tk.Button(self.right_frame, text="Batch Process Image", command=self.batch_process_image)
+        self.batch_process_image_button.grid(row=1, column=0, padx=5, pady=(20,5))
+
         self.resize_button = tk.Button(self.right_frame, text="Resize", command=self.resize)
-        self.resize_button.grid(row=1, column=0, padx=5, pady=(20,5))
+        self.resize_button.grid(row=2, column=0, padx=5, pady=(20,5))
 
         self.aliasing_var = tk.BooleanVar(value=True)
         self.aliasing_checkbox = tk.Checkbutton(self.right_frame, text="Aliasing", variable=self.aliasing_var)
@@ -140,7 +143,7 @@ class FunkerOptimizer:
             self.output_label, self.output_entry, self.output_button,
             self.modify_button, self.github_button, self.bug_report_button,
             self.spritesheet_and_xml_generator_button, self.message_text,
-            self.right_frame, self.load_image_button, self.resize_button,
+            self.right_frame, self.load_image_button, self.batch_process_image_button, self.resize_button,
             self.aliasing_checkbox, self.batch_process_button, self.button_frame
         ]
 
@@ -320,6 +323,64 @@ class FunkerOptimizer:
             else:
                 messagebox.showinfo("Batch Processing", "Batch processing completed successfully.")
                 self.show_message("Batch processing completed successfully.")
+
+        threading.Thread(target=task).start()
+
+    def batch_process_image(self):
+        def task():
+            image_files = filedialog.askopenfilenames(
+                title="Select Image Files",
+                filetypes=[("Image files", "*.png"), ("All files", "*.*")]
+            )
+            if not image_files:
+                return
+
+            percentage_str = tk.simpledialog.askstring("Resize Images", "Enter resize percentage (e.g. 50):")
+            if percentage_str is None:
+                return
+            try:
+                percentage = float(percentage_str)
+                if percentage <= 0:
+                    raise ValueError("Percentage must be positive.")
+            except Exception as e:
+                messagebox.showerror("Invalid Input", f"Please enter a valid positive number.\n{e}")
+                return
+
+            output_dir = filedialog.askdirectory(
+                title="Select Output Directory"
+            )
+            if not output_dir:
+                return
+
+            errors = []
+            for image_path in image_files:
+                try:
+                    with Image.open(image_path) as img:
+                        original_width, original_height = img.size
+                        new_width = int(original_width * (percentage / 100))
+                        new_height = int(original_height * (percentage / 100))
+                        new_size = (new_width, new_height)
+
+                        if self.aliasing_var.get():
+                            resample_filter = Image.Resampling.LANCZOS
+                        else:
+                            resample_filter = Image.Resampling.NEAREST
+
+                        resized_img = img.resize(new_size, resample_filter)
+
+                        base_name = os.path.basename(image_path)
+                        save_path = os.path.join(output_dir, base_name)
+                        resized_img.save(save_path)
+                except Exception as e:
+                    errors.append(f"Failed to process {image_path}: {e}")
+
+            if errors:
+                error_message = "Batch image processing completed with errors:\n" + "\n".join(errors)
+                messagebox.showerror("Batch Processing Errors", error_message)
+                self.show_message(error_message)
+            else:
+                messagebox.showinfo("Batch Processing", "Batch image processing completed successfully.")
+                self.show_message("Batch image processing completed successfully.")
 
         threading.Thread(target=task).start()
 
