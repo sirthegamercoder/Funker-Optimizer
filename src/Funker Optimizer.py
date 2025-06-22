@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
-
+ 
 import os
 import sys
 import tkinter as tk
@@ -88,12 +88,8 @@ class FunkerOptimizer:
         self.spritesheet_and_xml_generator_button = tk.Button(self.button_frame, text="SSAXMLG", command=self.spritesheet_and_xml_generator)
         self.spritesheet_and_xml_generator_button.grid(row=1, column=1, columnspan=2, pady=10, padx=(50,0))
 
-        self.message_text = tk.Text(root, height=8, width=70, state='disabled')
+        self.message_text = tk.Text(root, height=8, width=60, state='disabled')
         self.message_text.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
-
-        self.progress_bar = ttk.Progressbar(root, orient="horizontal", length=700, mode="determinate")
-        self.progress_bar.grid(row=4, column=0, columnspan=3, padx=5, pady=(0,10))
-        self.progress_bar.grid_remove()
 
         self.right_frame = tk.Frame(root, relief=tk.RIDGE, borderwidth=2)
         self.right_frame.grid(row=0, column=3, rowspan=4, padx=5, pady=5, sticky="n")
@@ -188,31 +184,24 @@ class FunkerOptimizer:
 
             if not input_path or not os.path.isfile(input_path):
                 messagebox.showerror("Error", "Please select a valid input data file.")
-                self.progress_bar.grid_remove()
                 return
             if not output_path:
                 messagebox.showerror("Error", "Please select a valid output data file path.")
-                self.progress_bar.grid_remove()
                 return
 
             try:
                 tree = ET.parse(input_path)
             except ET.ParseError as e:
                 messagebox.showerror("Data Parse Error", f"Failed to parse data file:\n{e}")
-                self.progress_bar.grid_remove()
                 return
             except Exception as e:
                 messagebox.showerror("Error", f"An unexpected error occurred while parsing data:\n{e}")
-                self.progress_bar.grid_remove()
                 return
 
             try:
                 root = tree.getroot()
                 subtextures = list(tree.iter('SubTexture'))
                 total = len(subtextures)
-                self.progress_bar['maximum'] = total
-                self.progress_bar['value'] = 0
-                self.progress_bar.grid()
 
                 for i, teste in enumerate(subtextures):
                     x = teste.get('x')
@@ -241,9 +230,6 @@ class FunkerOptimizer:
                     if fH is not None:
                         teste.set('frameHeight', str(int(fH) // self.division_number))
 
-                    self.progress_bar['value'] = i + 1
-                    self.root.update_idletasks()
-
                 tree.write(output_path, encoding='utf-8', xml_declaration=True)
 
                 if os.path.exists(output_path):
@@ -255,10 +241,7 @@ class FunkerOptimizer:
                 messagebox.showerror("File Error", f"File operation failed:\n{e}")
             except Exception as e:
                 messagebox.showerror("Error", f"An unexpected error occurred:\n{e}")
-            finally:
-                self.progress_bar.grid_remove()
 
-        self.progress_bar.grid()
         threading.Thread(target=task).start()
 
     def batch_process(self):
@@ -277,10 +260,6 @@ class FunkerOptimizer:
                 return
 
             total_files = len(input_files)
-            self.progress_bar['maximum'] = total_files
-            self.progress_bar['value'] = 0
-            self.progress_bar.grid()
-
             errors = []
             for i, input_path in enumerate(input_files):
                 try:
@@ -334,11 +313,6 @@ class FunkerOptimizer:
                 except Exception as e:
                     errors.append(f"Unexpected error in file {input_path}: {e}")
 
-                self.progress_bar['value'] = i + 1
-                self.root.update_idletasks()
-
-            self.progress_bar.grid_remove()
-
             if errors:
                 error_message = "Batch processing completed with errors:\n" + "\n".join(errors)
                 messagebox.showerror("Batch Processing Errors", error_message)
@@ -347,7 +321,6 @@ class FunkerOptimizer:
                 messagebox.showinfo("Batch Processing", "Batch processing completed successfully.")
                 self.show_message("Batch processing completed successfully.")
 
-        self.progress_bar.grid()
         threading.Thread(target=task).start()
 
     def show_message(self, message):
@@ -392,7 +365,6 @@ class FunkerOptimizer:
             if hasattr(self, 'image') and self.image:
                 percentage_str = tk.simpledialog.askstring("Resize Image", "Enter resize percentage (e.g. 50):")
                 if percentage_str is None:
-                    self.progress_bar.grid_remove()
                     return
                 try:
                     percentage = float(percentage_str)
@@ -400,7 +372,6 @@ class FunkerOptimizer:
                         raise ValueError("Percentage must be positive.")
                 except Exception as e:
                     messagebox.showerror("Invalid Input", f"Please enter a valid positive number.\n{e}")
-                    self.progress_bar.grid_remove()
                     return
 
                 original_width, original_height = self.image.size
@@ -414,11 +385,7 @@ class FunkerOptimizer:
                     resample_filter = Image.Resampling.NEAREST
 
                 try:
-                    self.progress_bar['maximum'] = 100
-                    self.progress_bar['value'] = 0
-                    self.progress_bar.grid()
                     for i in range(1, 101):
-                        self.progress_bar['value'] = i
                         self.root.update_idletasks()
                         import time
                         time.sleep(0.01)
@@ -426,7 +393,6 @@ class FunkerOptimizer:
                     self.image = self.image.resize(new_size, resample_filter)
                 except Exception as e:
                     messagebox.showerror("Error", f"Failed to resize image:\n{e}")
-                    self.progress_bar.grid_remove()
                     return
                 
                 save_path = filedialog.asksaveasfilename(
@@ -440,12 +406,9 @@ class FunkerOptimizer:
                         self.show_message(f"Resized image saved successfully:\n{save_path}")
                     except Exception as e:
                         messagebox.showerror("Error", f"Failed to save image:\n{e}")
-                self.progress_bar.grid_remove()
             else:
                 messagebox.showwarning("Warning", "No image loaded to resize.")
-                self.progress_bar.grid_remove()
 
-        self.progress_bar.grid()
         threading.Thread(target=task).start()
 
     def open_github_repo(self):
