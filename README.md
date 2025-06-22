@@ -72,7 +72,6 @@ After you have done the setup you should now need the following for this tool :
   - The reason I made this tool is because one of the feature is where can crop spritesheet but drawback is can increase file size so I decided to make a tool with adding a feature resize the image also reduce file size
 - Funker' Optimizer was originally is Divider XML PC which has unfortunately been removed since February 27th
 - Funker' Optimizer application icon is also inspired by Funkin' Optimizer application icon, except that the letters are combined and shaded
-- The name of the SSAXMLG button was originally named Spritesheet and XML Generator but because the button name is long and can close other buttons, the button name is shortened so that it cannot close other buttons
 
 # Tips
 - You can disable aliasing option if you want resize pixel sprite
