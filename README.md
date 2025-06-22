@@ -76,7 +76,8 @@ After you have done the setup you should now need the following for this tool :
 # Tips
 - You can disable aliasing option if you want resize pixel sprite
 - Make sure choose latest version of this tool
-- You can use the batch process button to modify multiple data files
+- You can use batch process button to modify multiple data files
+  - Also batch process image button to resize multiple images
 
 ## Alternative Download
 ### GameBanana
