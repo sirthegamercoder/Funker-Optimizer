@@ -42,14 +42,22 @@ class FunkerOptimizer:
         self.root.resizable(0, 0)
 
         window_width = 830
-        window_height = 260
+        window_height = 310
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         x_screen = int((screen_width / 2) - (window_width / 2))
         y_screen = int((screen_height / 2) - (window_height / 2))
         self.root.geometry(f"{window_width}x{window_height}+{x_screen}+{y_screen}")
 
+        self.root.grid_propagate(False)
+
         self.division_number = 2
+
+        self.button_frame = tk.Frame(root)
+        self.button_frame.grid(row=2, column=0, columnspan=3, pady=10, sticky="ew")
+        self.button_frame.grid_columnconfigure(0, weight=1)
+        self.button_frame.grid_columnconfigure(1, weight=1)
+        self.button_frame.grid_columnconfigure(2, weight=1)
 
         self.input_label = tk.Label(root, text="Input Data File:")
         self.input_label.grid(row=0, column=0, padx=5, pady=5, sticky="e")
@@ -65,17 +73,20 @@ class FunkerOptimizer:
         self.output_button = tk.Button(root, text="Browse", command=self.browse_output)
         self.output_button.grid(row=1, column=2, padx=5, pady=5)
 
-        self.modify_button = tk.Button(root, text="Modify", command=self.modify)
-        self.modify_button.grid(row=2, column=1, pady=10)
+        self.batch_process_button = tk.Button(self.button_frame, text="Batch Process", command=self.batch_process)
+        self.batch_process_button.grid(row=0, column=0, padx=(5,0))
 
-        self.github_button = tk.Button(root, text="GitHub Repo", command=self.open_github_repo)
-        self.github_button.grid(row=2, column=2, pady=10, padx=(10,0))
+        self.modify_button = tk.Button(self.button_frame, text="Modify", command=self.modify)
+        self.modify_button.grid(row=0, column=1)
 
-        self.bug_report_button = tk.Button(root, text="Bug Report", command=self.bug_report)
-        self.bug_report_button.grid(row=2, column=1, pady=10, padx=(303,0))
+        self.github_button = tk.Button(self.button_frame, text="GitHub Repo", command=self.open_github_repo)
+        self.github_button.grid(row=0, column=2, padx=(10,0))
 
-        self.spritesheet_and_xml_generator_button = tk.Button(root, text="SSAXMLG", command=self.spritesheet_and_xml_generator)
-        self.spritesheet_and_xml_generator_button.grid(row=2, column=1, columnspan=2, pady=10, padx=(50,0))
+        self.bug_report_button = tk.Button(self.button_frame, text="Bug Report", command=self.bug_report)
+        self.bug_report_button.grid(row=1, column=0, pady=10, padx=(0,0))
+
+        self.spritesheet_and_xml_generator_button = tk.Button(self.button_frame, text="SSAXMLG", command=self.spritesheet_and_xml_generator)
+        self.spritesheet_and_xml_generator_button.grid(row=1, column=1, columnspan=2, pady=10, padx=(50,0))
 
         self.message_text = tk.Text(root, height=8, width=70, state='disabled')
         self.message_text.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
@@ -134,7 +145,7 @@ class FunkerOptimizer:
             self.modify_button, self.github_button, self.bug_report_button,
             self.spritesheet_and_xml_generator_button, self.message_text,
             self.right_frame, self.load_image_button, self.resize_button,
-            self.aliasing_checkbox
+            self.aliasing_checkbox, self.batch_process_button, self.button_frame
         ]
 
         for widget in widgets:
@@ -246,6 +257,95 @@ class FunkerOptimizer:
                 messagebox.showerror("Error", f"An unexpected error occurred:\n{e}")
             finally:
                 self.progress_bar.grid_remove()
+
+        self.progress_bar.grid()
+        threading.Thread(target=task).start()
+
+    def batch_process(self):
+        def task():
+            input_files = filedialog.askopenfilenames(
+                title="Select Input Data Files",
+                filetypes=[("XML files", "*.xml"), ("All files", "*.*")]
+            )
+            if not input_files:
+                return
+
+            output_dir = filedialog.askdirectory(
+                title="Select Output Directory"
+            )
+            if not output_dir:
+                return
+
+            total_files = len(input_files)
+            self.progress_bar['maximum'] = total_files
+            self.progress_bar['value'] = 0
+            self.progress_bar.grid()
+
+            errors = []
+            for i, input_path in enumerate(input_files):
+                try:
+                    if not os.path.isfile(input_path):
+                        errors.append(f"Invalid input file: {input_path}")
+                        continue
+
+                    tree = ET.parse(input_path)
+                    root = tree.getroot()
+                    subtextures = list(tree.iter('SubTexture'))
+
+                    for teste in subtextures:
+                        x = teste.get('x')
+                        y = teste.get('y')
+                        width = teste.get('width')
+                        height = teste.get('height')
+                        fX = teste.get('frameX')
+                        fY = teste.get('frameY')
+                        fW = teste.get('frameWidth')
+                        fH = teste.get('frameHeight')
+
+                        if x is not None:
+                            teste.set('x', str(int(x) // self.division_number))
+                        if y is not None:
+                            teste.set('y', str(int(y) // self.division_number))
+                        if width is not None:
+                            teste.set('width', str(int(width) // self.division_number))
+                        if height is not None:
+                            teste.set('height', str(int(height) // self.division_number))
+                        if fX is not None:
+                            teste.set('frameX', str(int(fX) // self.division_number))
+                        if fY is not None:
+                            teste.set('frameY', str(int(fY) // self.division_number))
+                        if fW is not None:
+                            teste.set('frameWidth', str(int(fW) // self.division_number))
+                        if fH is not None:
+                            teste.set('frameHeight', str(int(fH) // self.division_number))
+
+                    base_name = os.path.basename(input_path)
+                    output_path = os.path.join(output_dir, base_name)
+
+                    tree.write(output_path, encoding='utf-8', xml_declaration=True)
+
+                    if not os.path.exists(output_path):
+                        errors.append(f"Failed to create output file for: {input_path}")
+
+                except ET.ParseError as e:
+                    errors.append(f"Parse error in file {input_path}: {e}")
+                except IOError as e:
+                    errors.append(f"File error in file {input_path}: {e}")
+                except Exception as e:
+                    errors.append(f"Unexpected error in file {input_path}: {e}")
+
+                self.progress_bar['value'] = i + 1
+                self.root.update_idletasks()
+
+            self.progress_bar.grid_remove()
+
+            if errors:
+                error_message = "Batch processing completed with errors:\n" + "\n".join(errors)
+                messagebox.showerror("Batch Processing Errors", error_message)
+                self.show_message(error_message)
+            else:
+                messagebox.showinfo("Batch Processing", "Batch processing completed successfully.")
+                self.show_message("Batch processing completed successfully.")
 
         self.progress_bar.grid()
         threading.Thread(target=task).start()
