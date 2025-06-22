@@ -74,9 +74,10 @@ After you have done the setup you should now need the following for this tool :
 - Funker' Optimizer application icon is also inspired by Funkin' Optimizer application icon, except that the letters are combined and shaded
 - The name of the SSAXMLG button was originally named Spritesheet and XML Generator but because the button name is long and can close other buttons, the button name is shortened so that it cannot close other buttons
 
-# Hint
+# Tips
 - You can disable aliasing option if you want resize pixel sprite
 - Make sure choose latest version of this tool
+- You can use the batch process button to modify multiple data files
 
 ## Alternative Download
 ### GameBanana
