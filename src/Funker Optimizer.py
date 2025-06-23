@@ -27,7 +27,7 @@ import sys
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import tkinter.simpledialog
-import xml.etree.ElementTree as ET
+from lxml import etree
 from PIL import Image
 import webbrowser
 import winreg
@@ -193,55 +193,19 @@ class FunkerOptimizer:
                 return
 
             try:
-                tree = ET.parse(input_path)
-            except ET.ParseError as e:
-                messagebox.showerror("Data Parse Error", f"Failed to parse data file:\n{e}")
-                return
-            except Exception as e:
-                messagebox.showerror("Error", f"An unexpected error occurred while parsing data:\n{e}")
-                return
-
-            try:
+                tree = etree.parse(input_path)
                 root = tree.getroot()
-                subtextures = list(tree.iter('SubTexture'))
-                total = len(subtextures)
+                subtextures = tree.xpath('//SubTexture')
 
-                for i, teste in enumerate(subtextures):
-                    x = teste.get('x')
-                    y = teste.get('y')
-                    width = teste.get('width')
-                    height = teste.get('height')
-                    fX = teste.get('frameX')
-                    fY = teste.get('frameY')
-                    fW = teste.get('frameWidth')
-                    fH = teste.get('frameHeight')
-
-                    if x is not None:
-                        teste.set('x', str(int(x) // self.division_number))
-                    if y is not None:
-                        teste.set('y', str(int(y) // self.division_number))
-                    if width is not None:
-                        teste.set('width', str(int(width) // self.division_number))
-                    if height is not None:
-                        teste.set('height', str(int(height) // self.division_number))
-                    if fX is not None:
-                        teste.set('frameX', str(int(fX) // self.division_number))
-                    if fY is not None:
-                        teste.set('frameY', str(int(fY) // self.division_number))
-                    if fW is not None:
-                        teste.set('frameWidth', str(int(fW) // self.division_number))
-                    if fH is not None:
-                        teste.set('frameHeight', str(int(fH) // self.division_number))
+                for teste in subtextures:
+                    for attr in ['x', 'y', 'width', 'height', 'frameX', 'frameY', 'frameWidth', 'frameHeight']:
+                        value = teste.get(attr)
+                        if value is not None:
+                            teste.set(attr, str(int(value) // self.division_number))
 
                 tree.write(output_path, encoding='utf-8', xml_declaration=True)
+                self.show_message(f"Modified Successfully.\nINPUT='{os.path.abspath(input_path)}'\nOUTPUT='{os.path.abspath(output_path)}'")
 
-                if os.path.exists(output_path):
-                    self.show_message(f"Modified Successfully.\nINPUT='{os.path.abspath(input_path)}'\nOUTPUT='{os.path.abspath(output_path)}'")
-                else:
-                    self.show_message("Error: Output file was not created.")
-
-            except IOError as e:
-                messagebox.showerror("File Error", f"File operation failed:\n{e}")
             except Exception as e:
                 messagebox.showerror("Error", f"An unexpected error occurred:\n{e}")
 
@@ -250,79 +214,43 @@ class FunkerOptimizer:
     def batch_process(self):
         def task():
             input_files = filedialog.askopenfilenames(
-                title="Select Input Data Files",
+                title="Select Data Files",
                 filetypes=[("XML files", "*.xml"), ("All files", "*.*")]
             )
             if not input_files:
                 return
 
-            output_dir = filedialog.askdirectory(
-                title="Select Output Directory"
-            )
+            output_dir = filedialog.askdirectory(title="Select Output Directory")
             if not output_dir:
                 return
 
-            total_files = len(input_files)
             errors = []
-            for i, input_path in enumerate(input_files):
+            for input_path in input_files:
                 try:
                     if not os.path.isfile(input_path):
                         errors.append(f"Invalid input file: {input_path}")
                         continue
 
-                    tree = ET.parse(input_path)
-                    root = tree.getroot()
-                    subtextures = list(tree.iter('SubTexture'))
+                    tree = etree.parse(input_path)
+                    subtextures = tree.xpath('//SubTexture')
 
                     for teste in subtextures:
-                        x = teste.get('x')
-                        y = teste.get('y')
-                        width = teste.get('width')
-                        height = teste.get('height')
-                        fX = teste.get('frameX')
-                        fY = teste.get('frameY')
-                        fW = teste.get('frameWidth')
-                        fH = teste.get('frameHeight')
-
-                        if x is not None:
-                            teste.set('x', str(int(x) // self.division_number))
-                        if y is not None:
-                            teste.set('y', str(int(y) // self.division_number))
-                        if width is not None:
-                            teste.set('width', str(int(width) // self.division_number))
-                        if height is not None:
-                            teste.set('height', str(int(height) // self.division_number))
-                        if fX is not None:
-                            teste.set('frameX', str(int(fX) // self.division_number))
-                        if fY is not None:
-                            teste.set('frameY', str(int(fY) // self.division_number))
-                        if fW is not None:
-                            teste.set('frameWidth', str(int(fW) // self.division_number))
-                        if fH is not None:
-                            teste.set('frameHeight', str(int(fH) // self.division_number))
+                        for attr in ['x', 'y', 'width', 'height', 'frameX', 'frameY', 'frameWidth', 'frameHeight']:
+                            value = teste.get(attr)
+                            if value is not None:
+                                teste.set(attr, str(int(value) // self.division_number))
 
                     base_name = os.path.basename(input_path)
                     output_path = os.path.join(output_dir, base_name)
-
                     tree.write(output_path, encoding='utf-8', xml_declaration=True)
 
-                    if not os.path.exists(output_path):
-                        errors.append(f"Failed to create output file for: {input_path}")
-
-                except ET.ParseError as e:
-                    errors.append(f"Parse error in file {input_path}: {e}")
-                except IOError as e:
-                    errors.append(f"File error in file {input_path}: {e}")
                 except Exception as e:
-                    errors.append(f"Unexpected error in file {input_path}: {e}")
+                    errors.append(f"Error processing {input_path}: {e}")
 
             if errors:
-                error_message = "Batch processing completed with errors:\n" + "\n".join(errors)
-                messagebox.showerror("Batch Processing Errors", error_message)
-                self.show_message(error_message)
+                messagebox.showerror("Batch Processing Errors", "\n".join(errors))
             else:
                 messagebox.showinfo("Batch Processing", "Batch processing completed successfully.")
-                self.show_message("Batch processing completed successfully.")
 
         threading.Thread(target=task).start()
 
