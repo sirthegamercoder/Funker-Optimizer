@@ -1,10 +1,14 @@
 ![Banner Alt](https://github.com/user-attachments/assets/050528e6-d754-42ba-a74b-44c8eed5ec2a)
 **Funker' Optimizer** is a tool that can optimize large spritesheet into small for Friday Night Funkin' (FNF). Is perfect if optimizing spritesheet using a PC, especially for you who are a optimizer using a PC.
 
+---
+
 ## What to do
 Before you run this tool please download `setup.bat` and `requirements.txt` from the `setup` folder by clicking on each file and press download raw file
 >[!TIP]
 >If you have GitZip extension just hover over each file and hit the checkbox and download or you can hit all the checkboxes for each file and download it
+
+---
 
 ## Necessary things
 After you have done the setup you should now need the following for this tool :
@@ -12,6 +16,8 @@ After you have done the setup you should now need the following for this tool :
 * A Extensible Markup Language `.xml` file
 > [!NOTE]
 > The `.xml` file must be in Starling/Sparrow format under `TextureAtlas imagePath=` there will be a green text saying `Created with` (expect Spritesheet and XML Generator) and at the bottom of the `Created with` (expect Spritesheet and XML Generator) text there is a link some examples is Adobe Animate, Spritesheet and XML Generator and Funkin Packer
+
+---
 
 ## Installation
 ### Method 1 : (Standard Install)
@@ -54,6 +60,8 @@ After you have done the setup you should now need the following for this tool :
 > [!WARNING]
 > Conversely, after entering the percentage number, an error & warning message will appear that reads `Failed to save image:` or `No image loaded to resize.`
 
+---
+
 ### Method 2 : (Terminal/CMD)
 1. Go to `src` folder and click at `Funker Optimizer.py` then click `Download raw file`
 > [!TIP]
@@ -67,17 +75,23 @@ After you have done the setup you should now need the following for this tool :
 4. Drag the `.py` file into Terminal/CMD and enter
 5. Do steps 5-15 of the first method
 
+---
+
 # Trivia
 - Actually the name Funker' Optimizer is inspired from the name of [Funkin' Optimizer](https://github.com/WhiteNinja00/Funkin-Optimizer) by [WhiteNinja00](https://github.com/WhiteNinja00)
   - The reason I made this tool is because one of the feature is where can crop spritesheet but drawback is can increase file size so I decided to make a tool with adding a feature resize the image also reduce file size
 - Funker' Optimizer was originally is Divider XML PC which has unfortunately been removed since February 27th
 - Funker' Optimizer application icon is also inspired by Funkin' Optimizer application icon, except that the letters are combined and shaded
 
+---
+
 # Tips
 - You can disable aliasing option if you want resize pixel sprite
 - Make sure choose latest version of this tool
 - You can use batch process button to modify multiple data files
   - Also batch process image button to resize multiple images
+ 
+---
 
 ## Alternative Download
 ### GameBanana
