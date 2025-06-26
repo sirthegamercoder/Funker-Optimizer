@@ -36,7 +36,6 @@ import threading
 
 class FunkerOptimizer:
     def __init__(self, root):
-        os.getlogin()
         self.root = root
         self.root.title("Funker' Optimizer")
         self.root.iconbitmap(sys.executable)
