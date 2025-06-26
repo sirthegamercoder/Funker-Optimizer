@@ -42,7 +42,7 @@ class FunkerOptimizer:
         self.root.resizable(0, 0)
 
         window_width = 900
-        window_height = 400
+        window_height = 360
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         x_screen = int((screen_width / 2) - (window_width / 2))
@@ -53,62 +53,77 @@ class FunkerOptimizer:
 
         self.division_number = 2
 
-        self.button_frame = tk.Frame(root)
+        self.main_frame = tk.Frame(root)
+        self.main_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        self.main_frame.grid_columnconfigure(0, weight=1)
+        self.main_frame.grid_columnconfigure(1, weight=0)
+
+        self.left_frame = tk.Frame(self.main_frame)
+        self.left_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
+        self.left_frame.grid_columnconfigure(1, weight=1)
+
+        self.input_label = tk.Label(self.left_frame, text="Input Data File:", font=("Segoe UI", 10, "bold"))
+        self.input_label.grid(row=0, column=0, padx=5, pady=5, sticky="e")
+        self.input_entry = tk.Entry(self.left_frame, width=55, font=("Segoe UI", 10))
+        self.input_entry.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+        self.input_button = tk.Button(self.left_frame, text="Browse", command=self.browse_input, font=("Segoe UI", 10))
+        self.input_button.grid(row=0, column=2, padx=5, pady=5)
+
+        self.output_label = tk.Label(self.left_frame, text="Output Data File:", font=("Segoe UI", 10, "bold"))
+        self.output_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+        self.output_entry = tk.Entry(self.left_frame, width=55, font=("Segoe UI", 10))
+        self.output_entry.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+        self.output_button = tk.Button(self.left_frame, text="Browse", command=self.browse_output, font=("Segoe UI", 10))
+        self.output_button.grid(row=1, column=2, padx=5, pady=5)
+
+        self.button_frame = tk.Frame(self.left_frame)
         self.button_frame.grid(row=2, column=0, columnspan=3, pady=15, sticky="ew")
         self.button_frame.grid_columnconfigure(0, weight=1)
         self.button_frame.grid_columnconfigure(1, weight=1)
         self.button_frame.grid_columnconfigure(2, weight=1)
 
-        self.input_label = tk.Label(root, text="Input Data File:", font=("Segoe UI", 10, "bold"))
-        self.input_label.grid(row=0, column=0, padx=10, pady=8, sticky="e")
-        self.input_entry = tk.Entry(root, width=55, font=("Segoe UI", 10))
-        self.input_entry.grid(row=0, column=1, padx=10, pady=8)
-        self.input_button = tk.Button(root, text="Browse", command=self.browse_input, font=("Segoe UI", 10), compound="left")
-        self.input_button.grid(row=0, column=2, padx=10, pady=8)
+        self.batch_process_button = tk.Button(self.button_frame, text="Batch Process XML", command=self.batch_process, font=("Segoe UI", 10))
+        self.batch_process_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
-        self.output_label = tk.Label(root, text="Output Data File:", font=("Segoe UI", 10, "bold"))
-        self.output_label.grid(row=1, column=0, padx=10, pady=8, sticky="e")
-        self.output_entry = tk.Entry(root, width=55, font=("Segoe UI", 10))
-        self.output_entry.grid(row=1, column=1, padx=10, pady=8)
-        self.output_button = tk.Button(root, text="Browse", command=self.browse_output, font=("Segoe UI", 10), compound="left")
-        self.output_button.grid(row=1, column=2, padx=10, pady=8)
+        self.modify_button = tk.Button(self.button_frame, text="Modify XML", command=self.modify, font=("Segoe UI", 10))
+        self.modify_button.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
 
-        self.batch_process_button = tk.Button(self.button_frame, text="Batch Process", command=self.batch_process, font=("Segoe UI", 10), compound="left")
-        self.batch_process_button.grid(row=0, column=0, padx=(10,5), pady=5)
+        self.github_button = tk.Button(self.button_frame, text="GitHub Repo", command=self.open_github_repo, font=("Segoe UI", 10))
+        self.github_button.grid(row=0, column=2, padx=5, pady=5, sticky="ew")
 
-        self.modify_button = tk.Button(self.button_frame, text="Modify", command=self.modify, font=("Segoe UI", 10), compound="left")
-        self.modify_button.grid(row=0, column=1, padx=5, pady=5)
+        self.bug_report_button = tk.Button(self.button_frame, text="Bug Report", command=self.bug_report, font=("Segoe UI", 10))
+        self.bug_report_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
-        self.github_button = tk.Button(self.button_frame, text="GitHub Repo", command=self.open_github_repo, font=("Segoe UI", 10), compound="left")
-        self.github_button.grid(row=0, column=2, padx=(5,10), pady=5)
+        self.spritesheet_and_xml_generator_button = tk.Button(self.button_frame, text="Spritesheet and XML Generator", command=self.spritesheet_and_xml_generator, font=("Segoe UI", 10))
+        self.spritesheet_and_xml_generator_button.grid(row=1, column=1, columnspan=2, padx=5, pady=5, sticky="ew")
 
-        self.bug_report_button = tk.Button(self.button_frame, text="Bug Report", command=self.bug_report, font=("Segoe UI", 10), compound="left")
-        self.bug_report_button.grid(row=1, column=0, pady=10, padx=(10,5))
+        self.message_text = tk.Text(self.left_frame, height=8, state='disabled', font=("Consolas", 10))
+        self.message_text.grid(row=3, column=0, columnspan=3, padx=5, pady=10, sticky="nsew")
+        self.left_frame.grid_rowconfigure(3, weight=1)
 
-        self.spritesheet_and_xml_generator_button = tk.Button(self.button_frame, text="SSAXMLG", command=self.spritesheet_and_xml_generator, font=("Segoe UI", 10), compound="left")
-        self.spritesheet_and_xml_generator_button.grid(row=1, column=1, columnspan=2, pady=10, padx=(50,10))
-
-        self.message_text = tk.Text(root, height=8, width=65, state='disabled', font=("Consolas", 10))
-        self.message_text.grid(row=3, column=0, columnspan=3, padx=10, pady=10)
-
-        self.right_frame = tk.Frame(root, relief=tk.RIDGE, borderwidth=2)
-        self.right_frame.grid(row=0, column=3, rowspan=4, padx=10, pady=10, sticky="n")
+        self.right_frame = tk.Frame(self.main_frame, relief=tk.RIDGE, borderwidth=2)
+        self.right_frame.grid(row=0, column=1, sticky="nsew", padx=(10, 0))
+        self.right_frame.grid_columnconfigure(0, weight=1)
 
         self.image = None
         self.image_label = None
 
-        self.load_image_button = tk.Button(self.right_frame, text="Load Image", command=self.browse_image, font=("Segoe UI", 10), compound="left")
-        self.load_image_button.grid(row=0, column=0, padx=10, pady=(20,10))
+        self.load_image_button = tk.Button(self.right_frame, text="Load Image", command=self.browse_image, font=("Segoe UI", 10))
+        self.load_image_button.grid(row=0, column=0, padx=10, pady=(20,10), sticky="ew")
 
-        self.batch_process_image_button = tk.Button(self.right_frame, text="Batch Process Image", command=self.batch_process_image, font=("Segoe UI", 10), compound="left")
-        self.batch_process_image_button.grid(row=1, column=0, padx=10, pady=(20,10))
+        self.batch_process_image_button = tk.Button(self.right_frame, text="Batch Process Image", command=self.batch_process_image, font=("Segoe UI", 10))
+        self.batch_process_image_button.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
 
-        self.resize_button = tk.Button(self.right_frame, text="Resize", command=self.resize, font=("Segoe UI", 10), compound="left")
-        self.resize_button.grid(row=2, column=0, padx=10, pady=(20,10))
+        self.resize_button = tk.Button(self.right_frame, text="Resize Image", command=self.resize, font=("Segoe UI", 10))
+        self.resize_button.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
 
         self.aliasing_var = tk.BooleanVar(value=True)
-        self.aliasing_checkbox = tk.Checkbutton(self.right_frame, text="Aliasing", variable=self.aliasing_var, font=("Segoe UI", 10), compound="left")
-        self.aliasing_checkbox.grid(row=3, column=0, padx=10, pady=(10,20))
+        self.aliasing_checkbox = tk.Checkbutton(self.right_frame, text="Aliasing", variable=self.aliasing_var, font=("Segoe UI", 10))
+        self.aliasing_checkbox.grid(row=3, column=0, padx=10, pady=(10,20), sticky="w")
+
+        self.image_file_display_label = tk.Label(self.right_frame, text="No image loaded", font=("Segoe UI", 9, "italic"))
+        self.image_file_display_label.grid(row=4, column=0, padx=10, pady=(0,10), sticky="ew")
+
 
         self.apply_system_theme()
 
@@ -130,36 +145,40 @@ class FunkerOptimizer:
             fg_color = "#ffffff"
             entry_bg = "#3c3f41"
             button_bg = "#444444"
+            checkbox_indicator = "#555555"
         else:
             bg_color = "#f0f0f0"
             fg_color = "#000000"
             entry_bg = "#ffffff"
             button_bg = "#e0e0e0"
+            checkbox_indicator = "#cccccc"
 
         self.root.configure(bg=bg_color)
+        self.main_frame.configure(bg=bg_color)
+        self.left_frame.configure(bg=bg_color)
+        self.right_frame.configure(bg=bg_color)
+        self.button_frame.configure(bg=bg_color)
 
         widgets = [
             self.input_label, self.input_entry, self.input_button,
             self.output_label, self.output_entry, self.output_button,
             self.modify_button, self.github_button, self.bug_report_button,
             self.spritesheet_and_xml_generator_button, self.message_text,
-            self.right_frame, self.load_image_button, self.batch_process_image_button, self.resize_button,
-            self.aliasing_checkbox, self.batch_process_button, self.button_frame
+            self.load_image_button, self.batch_process_image_button, self.resize_button,
+            self.aliasing_checkbox, self.batch_process_button, self.image_file_display_label
         ]
 
         for widget in widgets:
             if isinstance(widget, tk.Label):
                 widget.configure(bg=bg_color, fg=fg_color)
             elif isinstance(widget, tk.Entry):
-                widget.configure(bg=entry_bg, fg=fg_color, insertbackground=fg_color)
+                widget.configure(bg=entry_bg, fg=fg_color, insertbackground=fg_color, relief=tk.FLAT, bd=1)
             elif isinstance(widget, tk.Button):
                 widget.configure(bg=button_bg, fg=fg_color, activebackground=button_bg, relief=tk.RAISED, bd=2)
             elif isinstance(widget, tk.Text):
                 widget.configure(bg=entry_bg, fg=fg_color, insertbackground=fg_color, relief=tk.SUNKEN, bd=2)
-            elif isinstance(widget, tk.Frame):
-                widget.configure(bg=bg_color)
             elif isinstance(widget, tk.Checkbutton):
-                widget.configure(bg=bg_color, fg=fg_color, activebackground=button_bg, selectcolor=bg_color)
+                widget.configure(bg=bg_color, fg=fg_color, activebackground=button_bg, selectcolor=checkbox_indicator, relief=tk.FLAT)
 
     def browse_input(self):
         file_path = filedialog.askopenfilename(
@@ -251,6 +270,8 @@ class FunkerOptimizer:
                 messagebox.showerror("Batch Processing Errors", "\n".join(errors))
             else:
                 messagebox.showinfo("Batch Processing", "Batch processing completed successfully.")
+                self.show_message("Batch XML processing completed successfully.")
+
 
         threading.Thread(target=task).start()
 
@@ -330,24 +351,9 @@ class FunkerOptimizer:
                 messagebox.showerror("Error", f"Failed to open image file:\n{e}")
                 return
 
-            if self.image_label:
-                self.image_label.destroy()
-                self.image_label = None
-            
             file_name = os.path.basename(file_path)
-            
-            self.image_label = tk.Label(self.right_frame, text=f"File: {file_name}")
-
-            theme = self.detect_system_theme()
-            if theme == "dark":
-                bg_color = "#2e2e2e"
-                fg_color = "#ffffff"
-            else:
-                bg_color = "#f0f0f0"
-                fg_color = "#000000"
-
-            self.image_label.configure(bg=bg_color, fg=fg_color)
-            self.image_label.grid(row=2, column=0, padx=5, pady=(20,5))
+            self.image_file_display_label.config(text=f"Loaded: {file_name}")
+            self.show_message(f"Image loaded: {file_name}")
 
     def resize(self):
         def task():
@@ -374,11 +380,6 @@ class FunkerOptimizer:
                     resample_filter = Image.Resampling.NEAREST
 
                 try:
-                    for i in range(1, 101):
-                        self.root.update_idletasks()
-                        import time
-                        time.sleep(0.01)
-
                     self.image = self.image.resize(new_size, resample_filter)
                 except Exception as e:
                     messagebox.showerror("Error", f"Failed to resize image:\n{e}")
