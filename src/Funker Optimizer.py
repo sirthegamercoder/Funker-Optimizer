@@ -36,6 +36,7 @@ import threading
 
 class FunkerOptimizer:
     def __init__(self, root):
+        os.getlogin()
         self.root = root
         self.root.title("Funker' Optimizer")
         self.root.iconbitmap(sys.executable)
@@ -53,18 +54,6 @@ class FunkerOptimizer:
 
         self.division_number = 2
 
-        icon_path = r"src/Icons"
-        self.icon_browse = tk.PhotoImage(file=f"{icon_path}/browse.png")
-        self.icon_batch = tk.PhotoImage(file=f"{icon_path}/batch.png")
-        self.icon_modify = tk.PhotoImage(file=f"{icon_path}/modify.png")
-        self.icon_github = tk.PhotoImage(file=f"{icon_path}/github.png")
-        self.icon_bug = tk.PhotoImage(file=f"{icon_path}/bug-report.png")
-        self.icon_ssaxmlg = tk.PhotoImage(file=f"{icon_path}/ssaxmlg.png")
-        self.icon_load_image = tk.PhotoImage(file=f"{icon_path}/load-image.png")
-        self.icon_batch_image = tk.PhotoImage(file=f"{icon_path}/batch-image.png")
-        self.icon_resize = tk.PhotoImage(file=f"{icon_path}/resize.png")
-        self.icon_aliasing = tk.PhotoImage(file=f"{icon_path}/aliasing.png")
-
         self.button_frame = tk.Frame(root)
         self.button_frame.grid(row=2, column=0, columnspan=3, pady=15, sticky="ew")
         self.button_frame.grid_columnconfigure(0, weight=1)
@@ -75,29 +64,29 @@ class FunkerOptimizer:
         self.input_label.grid(row=0, column=0, padx=10, pady=8, sticky="e")
         self.input_entry = tk.Entry(root, width=55, font=("Segoe UI", 10))
         self.input_entry.grid(row=0, column=1, padx=10, pady=8)
-        self.input_button = tk.Button(root, text="Browse", command=self.browse_input, font=("Segoe UI", 10), image=self.icon_browse, compound="left")
+        self.input_button = tk.Button(root, text="Browse", command=self.browse_input, font=("Segoe UI", 10), compound="left")
         self.input_button.grid(row=0, column=2, padx=10, pady=8)
 
         self.output_label = tk.Label(root, text="Output Data File:", font=("Segoe UI", 10, "bold"))
         self.output_label.grid(row=1, column=0, padx=10, pady=8, sticky="e")
         self.output_entry = tk.Entry(root, width=55, font=("Segoe UI", 10))
         self.output_entry.grid(row=1, column=1, padx=10, pady=8)
-        self.output_button = tk.Button(root, text="Browse", command=self.browse_output, font=("Segoe UI", 10), image=self.icon_browse, compound="left")
+        self.output_button = tk.Button(root, text="Browse", command=self.browse_output, font=("Segoe UI", 10), compound="left")
         self.output_button.grid(row=1, column=2, padx=10, pady=8)
 
-        self.batch_process_button = tk.Button(self.button_frame, text="Batch Process", command=self.batch_process, font=("Segoe UI", 10), image=self.icon_batch, compound="left")
+        self.batch_process_button = tk.Button(self.button_frame, text="Batch Process", command=self.batch_process, font=("Segoe UI", 10), compound="left")
         self.batch_process_button.grid(row=0, column=0, padx=(10,5), pady=5)
 
-        self.modify_button = tk.Button(self.button_frame, text="Modify", command=self.modify, font=("Segoe UI", 10), image=self.icon_modify, compound="left")
+        self.modify_button = tk.Button(self.button_frame, text="Modify", command=self.modify, font=("Segoe UI", 10), compound="left")
         self.modify_button.grid(row=0, column=1, padx=5, pady=5)
 
-        self.github_button = tk.Button(self.button_frame, text="GitHub Repo", command=self.open_github_repo, font=("Segoe UI", 10), image=self.icon_github, compound="left")
+        self.github_button = tk.Button(self.button_frame, text="GitHub Repo", command=self.open_github_repo, font=("Segoe UI", 10), compound="left")
         self.github_button.grid(row=0, column=2, padx=(5,10), pady=5)
 
-        self.bug_report_button = tk.Button(self.button_frame, text="Bug Report", command=self.bug_report, font=("Segoe UI", 10), image=self.icon_bug, compound="left")
+        self.bug_report_button = tk.Button(self.button_frame, text="Bug Report", command=self.bug_report, font=("Segoe UI", 10), compound="left")
         self.bug_report_button.grid(row=1, column=0, pady=10, padx=(10,5))
 
-        self.spritesheet_and_xml_generator_button = tk.Button(self.button_frame, text="SSAXMLG", command=self.spritesheet_and_xml_generator, font=("Segoe UI", 10), image=self.icon_ssaxmlg, compound="left")
+        self.spritesheet_and_xml_generator_button = tk.Button(self.button_frame, text="SSAXMLG", command=self.spritesheet_and_xml_generator, font=("Segoe UI", 10), compound="left")
         self.spritesheet_and_xml_generator_button.grid(row=1, column=1, columnspan=2, pady=10, padx=(50,10))
 
         self.message_text = tk.Text(root, height=8, width=65, state='disabled', font=("Consolas", 10))
@@ -109,17 +98,17 @@ class FunkerOptimizer:
         self.image = None
         self.image_label = None
 
-        self.load_image_button = tk.Button(self.right_frame, text="Load Image", command=self.browse_image, font=("Segoe UI", 10), image=self.icon_load_image, compound="left")
+        self.load_image_button = tk.Button(self.right_frame, text="Load Image", command=self.browse_image, font=("Segoe UI", 10), compound="left")
         self.load_image_button.grid(row=0, column=0, padx=10, pady=(20,10))
 
-        self.batch_process_image_button = tk.Button(self.right_frame, text="Batch Process Image", command=self.batch_process_image, font=("Segoe UI", 10), image=self.icon_batch_image, compound="left")
+        self.batch_process_image_button = tk.Button(self.right_frame, text="Batch Process Image", command=self.batch_process_image, font=("Segoe UI", 10), compound="left")
         self.batch_process_image_button.grid(row=1, column=0, padx=10, pady=(20,10))
 
-        self.resize_button = tk.Button(self.right_frame, text="Resize", command=self.resize, font=("Segoe UI", 10), image=self.icon_resize, compound="left")
+        self.resize_button = tk.Button(self.right_frame, text="Resize", command=self.resize, font=("Segoe UI", 10), compound="left")
         self.resize_button.grid(row=2, column=0, padx=10, pady=(20,10))
 
         self.aliasing_var = tk.BooleanVar(value=True)
-        self.aliasing_checkbox = tk.Checkbutton(self.right_frame, text="Aliasing", variable=self.aliasing_var, font=("Segoe UI", 10), image=self.icon_aliasing, compound="left")
+        self.aliasing_checkbox = tk.Checkbutton(self.right_frame, text="Aliasing", variable=self.aliasing_var, font=("Segoe UI", 10), compound="left")
         self.aliasing_checkbox.grid(row=3, column=0, padx=10, pady=(10,20))
 
         self.apply_system_theme()
