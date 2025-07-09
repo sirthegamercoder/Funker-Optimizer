@@ -72,7 +72,7 @@ After you have done the setup you should now need the following for this tool :
 > [!NOTE]
 > Before you close this tool you can press Spritesheet and XML Generator (formerly SSAXMLG) button which will redirect to the FNF Spritesheet and XML Generator Web and then close the tool
 
-> [!NOTE]
+> [!TIP]
 > If you select option resize a multiple images, a massage to appear that read `Image resizing completed successfully.`
 
 ---
