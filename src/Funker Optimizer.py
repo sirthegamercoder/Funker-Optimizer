@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
- 
+
 import os
 import sys
 import tkinter as tk
@@ -32,7 +32,6 @@ from PIL import Image
 import webbrowser
 import winreg
 from tkinter import ttk
-import threading
 
 class FunkerOptimizer:
     def __init__(self, root):
@@ -89,7 +88,7 @@ class FunkerOptimizer:
         self.modify_button.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
 
         self.github_button = tk.Button(self.button_frame, text="GitHub Repo", command=self.open_github_repo, font=("Segoe UI", 10))
-        self.github_button.grid(row=0, column=2, padx=5, pady=5, sticky="ew")
+        self.github_button.grid(row=0, column=2, padx=5, pady=5)
 
         self.bug_report_button = tk.Button(self.button_frame, text="Bug Report", command=self.bug_report, font=("Segoe UI", 10))
         self.bug_report_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
@@ -106,16 +105,14 @@ class FunkerOptimizer:
         self.right_frame.grid_columnconfigure(0, weight=1)
 
         self.image = None
+        self.loaded_images = []
         self.image_label = None
 
         self.load_image_button = tk.Button(self.right_frame, text="Load Image", command=self.browse_image, font=("Segoe UI", 10))
         self.load_image_button.grid(row=0, column=0, padx=10, pady=(20,10), sticky="ew")
 
-        self.batch_process_image_button = tk.Button(self.right_frame, text="Batch Process Image", command=self.batch_process_image, font=("Segoe UI", 10))
-        self.batch_process_image_button.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
-
         self.resize_button = tk.Button(self.right_frame, text="Resize Image", command=self.resize, font=("Segoe UI", 10))
-        self.resize_button.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
+        self.resize_button.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
 
         self.aliasing_var = tk.BooleanVar(value=True)
         self.aliasing_checkbox = tk.Checkbutton(self.right_frame, text="Aliasing", variable=self.aliasing_var, font=("Segoe UI", 10))
@@ -123,7 +120,6 @@ class FunkerOptimizer:
 
         self.image_file_display_label = tk.Label(self.right_frame, text="No image loaded", font=("Segoe UI", 9, "italic"))
         self.image_file_display_label.grid(row=4, column=0, padx=10, pady=(0,10), sticky="ew")
-
 
         self.apply_system_theme()
 
@@ -164,7 +160,7 @@ class FunkerOptimizer:
             self.output_label, self.output_entry, self.output_button,
             self.modify_button, self.github_button, self.bug_report_button,
             self.spritesheet_and_xml_generator_button, self.message_text,
-            self.load_image_button, self.batch_process_image_button, self.resize_button,
+            self.load_image_button, self.resize_button,
             self.aliasing_checkbox, self.batch_process_button, self.image_file_display_label
         ]
 
@@ -200,20 +196,53 @@ class FunkerOptimizer:
             self.output_entry.insert(0, file_path)
 
     def modify(self):
-        def task():
-            input_path = self.input_entry.get()
-            output_path = self.output_entry.get()
+        input_path = self.input_entry.get()
+        output_path = self.output_entry.get()
 
-            if not input_path or not os.path.isfile(input_path):
-                messagebox.showerror("Error", "Please select a valid input data file.")
-                return
-            if not output_path:
-                messagebox.showerror("Error", "Please select a valid output data file path.")
-                return
+        if not input_path or not os.path.isfile(input_path):
+            messagebox.showerror("Error", "Please select a valid input data file.")
+            return
+        if not output_path:
+            messagebox.showerror("Error", "Please select a valid output data file path.")
+            return
 
+        try:
+            tree = etree.parse(input_path)
+            root = tree.getroot()
+            subtextures = tree.xpath('//SubTexture')
+
+            for teste in subtextures:
+                for attr in ['x', 'y', 'width', 'height', 'frameX', 'frameY', 'frameWidth', 'frameHeight']:
+                    value = teste.get(attr)
+                    if value is not None:
+                        teste.set(attr, str(int(value) // self.division_number))
+
+            tree.write(output_path, encoding='utf-8', xml_declaration=True)
+            self.show_message(f"Modified Successfully.\nINPUT='{os.path.abspath(input_path)}'\nOUTPUT='{os.path.abspath(output_path)}'")
+
+        except Exception as e:
+            messagebox.showerror("Error", f"An unexpected error occurred:\n{e}")
+
+    def batch_process(self):
+        input_files = filedialog.askopenfilenames(
+            title="Select Data Files",
+            filetypes=[("XML files", "*.xml"), ("All files", "*.*")]
+        )
+        if not input_files:
+            return
+
+        output_dir = filedialog.askdirectory(title="Select Output Directory")
+        if not output_dir:
+            return
+
+        errors = []
+        for input_path in input_files:
             try:
+                if not os.path.isfile(input_path):
+                    errors.append(f"Invalid input file: {input_path}")
+                    continue
+
                 tree = etree.parse(input_path)
-                root = tree.getroot()
                 subtextures = tree.xpath('//SubTexture')
 
                 for teste in subtextures:
@@ -222,116 +251,18 @@ class FunkerOptimizer:
                         if value is not None:
                             teste.set(attr, str(int(value) // self.division_number))
 
+                base_name = os.path.basename(input_path)
+                output_path = os.path.join(output_dir, base_name)
                 tree.write(output_path, encoding='utf-8', xml_declaration=True)
-                self.show_message(f"Modified Successfully.\nINPUT='{os.path.abspath(input_path)}'\nOUTPUT='{os.path.abspath(output_path)}'")
 
             except Exception as e:
-                messagebox.showerror("Error", f"An unexpected error occurred:\n{e}")
+                errors.append(f"Error processing {input_path}: {e}")
 
-        threading.Thread(target=task).start()
-
-    def batch_process(self):
-        def task():
-            input_files = filedialog.askopenfilenames(
-                title="Select Data Files",
-                filetypes=[("XML files", "*.xml"), ("All files", "*.*")]
-            )
-            if not input_files:
-                return
-
-            output_dir = filedialog.askdirectory(title="Select Output Directory")
-            if not output_dir:
-                return
-
-            errors = []
-            for input_path in input_files:
-                try:
-                    if not os.path.isfile(input_path):
-                        errors.append(f"Invalid input file: {input_path}")
-                        continue
-
-                    tree = etree.parse(input_path)
-                    subtextures = tree.xpath('//SubTexture')
-
-                    for teste in subtextures:
-                        for attr in ['x', 'y', 'width', 'height', 'frameX', 'frameY', 'frameWidth', 'frameHeight']:
-                            value = teste.get(attr)
-                            if value is not None:
-                                teste.set(attr, str(int(value) // self.division_number))
-
-                    base_name = os.path.basename(input_path)
-                    output_path = os.path.join(output_dir, base_name)
-                    tree.write(output_path, encoding='utf-8', xml_declaration=True)
-
-                except Exception as e:
-                    errors.append(f"Error processing {input_path}: {e}")
-
-            if errors:
-                messagebox.showerror("Batch Processing Errors", "\n".join(errors))
-            else:
-                messagebox.showinfo("Batch Processing", "Batch processing completed successfully.")
-                self.show_message("Batch XML processing completed successfully.")
-
-
-        threading.Thread(target=task).start()
-
-    def batch_process_image(self):
-        def task():
-            image_files = filedialog.askopenfilenames(
-                title="Select Image Files",
-                filetypes=[("Image files", "*.png"), ("All files", "*.*")]
-            )
-            if not image_files:
-                return
-
-            percentage_str = tk.simpledialog.askstring("Resize Images", "Enter resize percentage (e.g. 50):")
-            if percentage_str is None:
-                return
-            try:
-                percentage = float(percentage_str)
-                if percentage <= 0:
-                    raise ValueError("Percentage must be positive.")
-            except Exception as e:
-                messagebox.showerror("Invalid Input", f"Please enter a valid positive number.\n{e}")
-                return
-
-            output_dir = filedialog.askdirectory(
-                title="Select Output Directory"
-            )
-            if not output_dir:
-                return
-
-            errors = []
-            for image_path in image_files:
-                try:
-                    with Image.open(image_path) as img:
-                        original_width, original_height = img.size
-                        new_width = int(original_width * (percentage / 100))
-                        new_height = int(original_height * (percentage / 100))
-                        new_size = (new_width, new_height)
-
-                        if self.aliasing_var.get():
-                            resample_filter = Image.Resampling.LANCZOS
-                        else:
-                            resample_filter = Image.Resampling.NEAREST
-
-                        resized_img = img.resize(new_size, resample_filter)
-
-                        base_name = os.path.basename(image_path)
-                        save_path = os.path.join(output_dir, base_name)
-                        resized_img.save(save_path)
-                except Exception as e:
-                    errors.append(f"Failed to process {image_path}: {e}")
-
-            if errors:
-                error_message = "Batch image processing completed with errors:\n" + "\n".join(errors)
-                messagebox.showerror("Batch Processing Errors", error_message)
-                self.show_message(error_message)
-            else:
-                messagebox.showinfo("Batch Processing", "Batch image processing completed successfully.")
-                self.show_message("Batch image processing completed successfully.")
-
-        threading.Thread(target=task).start()
+        if errors:
+            messagebox.showerror("Batch Processing Errors", "\n".join(errors))
+        else:
+            messagebox.showinfo("Batch Processing", "Batch processing completed successfully.")
+            self.show_message("Batch XML processing completed successfully.")
 
     def show_message(self, message):
         self.message_text.config(state='normal')
@@ -340,6 +271,16 @@ class FunkerOptimizer:
         self.message_text.config(state='disabled')
 
     def browse_image(self):
+        response = messagebox.askyesno(
+            "Load Image Option",
+            "Do you want to load a single image (Yes) or multiple images (No)?"
+        )
+        if response:
+            self.browse_single_image()
+        else:
+            self.browse_multiple_images()
+
+    def browse_single_image(self):
         file_path = filedialog.askopenfilename(
             title="Select Image File",
             filetypes=[("Image files", "*.png"), ("All files", "*.*")]
@@ -347,6 +288,7 @@ class FunkerOptimizer:
         if file_path:
             try:
                 self.image = Image.open(file_path)
+                self.loaded_images = []
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to open image file:\n{e}")
                 return
@@ -355,21 +297,116 @@ class FunkerOptimizer:
             self.image_file_display_label.config(text=f"Loaded: {file_name}")
             self.show_message(f"Image loaded: {file_name}")
 
-    def resize(self):
-        def task():
-            if hasattr(self, 'image') and self.image:
-                percentage_str = tk.simpledialog.askstring("Resize Image", "Enter resize percentage (e.g. 50):")
-                if percentage_str is None:
-                    return
-                try:
-                    percentage = float(percentage_str)
-                    if percentage <= 0:
-                        raise ValueError("Percentage must be positive.")
-                except Exception as e:
-                    messagebox.showerror("Invalid Input", f"Please enter a valid positive number.\n{e}")
-                    return
+    def browse_multiple_images(self):
+        file_paths = filedialog.askopenfilenames(
+            title="Select Image Files",
+            filetypes=[("Image files", "*.png"), ("All files", "*.*")]
+        )
+        if file_paths:
+            self.loaded_images = []
+            loaded_images_count = 0
+            failed_to_load = []
 
-                original_width, original_height = self.image.size
+            for file_path in file_paths:
+                try:
+                    img = Image.open(file_path)
+                    self.loaded_images.append((file_path, img))
+                    loaded_images_count += 1
+                except Exception as e:
+                    failed_to_load.append(f"{os.path.basename(file_path)}: {e}")
+                    self.show_message(f"Failed to open {os.path.basename(file_path)}: {e}")
+
+            if loaded_images_count > 0:
+                self.image_file_display_label.config(text=f"Loaded {loaded_images_count} images.")
+                self.show_message(f"Successfully loaded {loaded_images_count} images.")
+                self.image = None
+            else:
+                self.image_file_display_label.config(text="No images loaded.")
+                self.show_message("No images were loaded.")
+
+            if failed_to_load:
+                error_msg = "Some images failed to load:\n" + "\n".join(failed_to_load)
+                messagebox.showwarning("Image Loading Warnings", error_msg)
+                self.show_message(error_msg)
+
+    def resize(self):
+        response = messagebox.askyesno(
+            "Resize Option",
+            "Do you want to resize the currently loaded single image (Yes) or resize multiple images (No)?"
+        )
+        if response:
+            self.resize_single_image()
+        else:
+            self.resize_multiple_images()
+
+    def resize_single_image(self):
+        if not (hasattr(self, 'image') and self.image):
+            messagebox.showwarning("Warning", "No single image loaded to resize.")
+            return
+
+        percentage_str = tk.simpledialog.askstring("Resize Image", "Enter resize percentage (e.g. 50):")
+        if percentage_str is None:
+            return
+        try:
+            percentage = float(percentage_str)
+            if percentage <= 0:
+                raise ValueError("Percentage must be positive.")
+        except Exception as e:
+            messagebox.showerror("Invalid Input", f"Please enter a valid positive number.\n{e}")
+            return
+
+        original_width, original_height = self.image.size
+        new_width = int(original_width * (percentage / 100))
+        new_height = int(original_height * (percentage / 100))
+        new_size = (new_width, new_height)
+
+        if self.aliasing_var.get():
+            resample_filter = Image.Resampling.LANCZOS
+        else:
+            resample_filter = Image.Resampling.NEAREST
+
+        try:
+            self.image = self.image.resize(new_size, resample_filter)
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to resize image:\n{e}")
+            return
+
+        save_path = filedialog.asksaveasfilename(
+            title="Save Resized Image",
+            defaultextension=".png",
+            filetypes=[("PNG files", "*.png"), ("All files", "*.*")]
+        )
+        if save_path:
+            try:
+                self.image.save(save_path)
+                self.show_message(f"Resized image saved successfully:\n{os.path.abspath(save_path)}")
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to save image:\n{e}")
+
+    def resize_multiple_images(self):
+        if not self.loaded_images:
+            messagebox.showwarning("Warning", "No images loaded for batch resizing.")
+            return
+
+        percentage_str = tk.simpledialog.askstring("Resize Image", "Enter resize percentage (e.g. 50):")
+        if percentage_str is None:
+            return
+        try:
+            percentage = float(percentage_str)
+            if percentage <= 0:
+                raise ValueError("Percentage must be positive.")
+        except Exception as e:
+            messagebox.showerror("Invalid Input", f"Please enter a valid positive number.\n{e}")
+            return
+
+        output_dir = filedialog.askdirectory(title="Select Output Directory for Resized Images")
+        if not output_dir:
+            return
+
+        errors = []
+        for file_path, img_obj in self.loaded_images:
+            try:
+                original_width, original_height = img_obj.size
                 new_width = int(original_width * (percentage / 100))
                 new_height = int(original_height * (percentage / 100))
                 new_size = (new_width, new_height)
@@ -379,27 +416,22 @@ class FunkerOptimizer:
                 else:
                     resample_filter = Image.Resampling.NEAREST
 
-                try:
-                    self.image = self.image.resize(new_size, resample_filter)
-                except Exception as e:
-                    messagebox.showerror("Error", f"Failed to resize image:\n{e}")
-                    return
-                
-                save_path = filedialog.asksaveasfilename(
-                    title="Save Resized Image",
-                    defaultextension=".png",
-                    filetypes=[("PNG files", "*.png"), ("All files", "*.*")]
-                )
-                if save_path:
-                    try:
-                        self.image.save(save_path)
-                        self.show_message(f"Resized image saved successfully:\n{save_path}")
-                    except Exception as e:
-                        messagebox.showerror("Error", f"Failed to save image:\n{e}")
-            else:
-                messagebox.showwarning("Warning", "No image loaded to resize.")
+                resized_img = img_obj.resize(new_size, resample_filter)
 
-        threading.Thread(target=task).start()
+                base_name = os.path.basename(file_path)
+                save_path = os.path.join(output_dir, base_name)
+                resized_img.save(save_path)
+            except Exception as e:
+                errors.append(f"Failed to process {os.path.basename(file_path)}: {e}")
+
+        if errors:
+            error_message = "Image resizing completed with errors:\n" + "\n".join(errors)
+            messagebox.showerror("Image Resizing Errors", error_message)
+            self.show_message(error_message)
+        else:
+            messagebox.showinfo("Image Resizing", "Image resizing completed successfully.")
+            self.show_message("Image resizing completed successfully.")
+
 
     def open_github_repo(self):
         url = "https://github.com/sirthegamercoder/Funker-Optimizer"
