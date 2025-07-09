@@ -1,8 +1,7 @@
 @echo off
-title Setup for Funker Optimizer
-
+echo.
 echo ==========================
-echo  Funker Optimizer - Setup
+echo  Funker' Optimizer - Setup
 echo ==========================
 echo.
 echo This script will install packages from the requirements.txt
