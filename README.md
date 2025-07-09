@@ -22,29 +22,41 @@ After you have done the setup you should now need the following for this tool :
 ## Installation
 ### Method 1 : (Standard Install)
 1. Download the tool you can click [here](https://github.com/sirthegamercoder/Funker-Optimizer/releases)
+
 2. Wait for some time until it's done
+
 3. Open File Explorer and find the directory where you downloaded it
+
 4. Double click on an `.exe` file
 > [!TIP]
 > If you get a Windows protected your PC warning click on `More info` then click `Run anyway`
 
 5. Click on the browse button of `Input Data File :`
+
 6. Find the directory where the `.xml` file is located and click then open it
+
 7. Do the same by clicking the browse button of `Output Data File :` and find the directory and click on `.xml` file then save it
 > [!TIP]
 > If you are asked to replace it like massage `Do you want to replace it?` just click `Yes`
 
 8. Afterward, click the modify button below
+
 9. Wait until a text message has appear that read `Modified Successfully.` accompanied by input and output path names
-> [!WARNING]
-> Conversely, after pressing the modify button an error message will appear that reads `Output file was not created.` or `An error occurred:`
+> [!TIP]
+> If you use `Batch Process XML` a text massage has appear that read `Batch processing completed successfully.`
 
 10. After modifying the `.xml` file hover over the load image button and click it
+> [!TIP]
+> Whem click `Load Image` button there is a two options, load a single image or load a multiple images. You can select that options if you want load a single image or mulitple images
+
 11. Find the directory where the `.png` file is located, click and open it
-> [!NOTE]
-> After loading the image, a text will appear that reads `File:` accompanied by the `.png` filename actually initially there was a feature, namely the image preview where after loading the image will show an overview of the image but because the image preview feature can slow down the image loading process plus can make the tool unresponsive for low-end PC so the feature was removed
+> [!TIP]
+> You can select all `.png` files if you use option load a multiple image
 
 12. Afterward, click the resize button under the load image button
+> [!TIP]
+> When click `Resize Image` there is a two options again, resize a single image or resize a multiple images. You can select thay options again if you want resize a single image or multiple images
+
 13. Enter the percentage number (Without %)
 > [!CAUTION]
 > DO NOT ENTER A PERCENTAGE NUMBER OF MORE THAN 50 THIS HAS BEEN EXPLAINED IN `ReadMe.txt` on `art` folder
@@ -53,12 +65,15 @@ After you have done the setup you should now need the following for this tool :
 > [!TIP]
 > If you are asked to replace it like massage `Do you want to replace it?` just click `Yes`
 
-15. Wait for a message to appear that reads `Resized image saved successfully:` and close the tool
-> [!NOTE]
-> Before you close this tool you can press the SSAXMLG button which will redirect to the FNF Spritesheet and XML Generator Web and then close the tool
+> [!TIP]
+> If you select option resize a multiple images, you don't need to click on images file to save it
 
-> [!WARNING]
-> Conversely, after entering the percentage number, an error & warning message will appear that reads `Failed to save image:` or `No image loaded to resize.`
+15. Wait for a message to appear that read `Resized image saved successfully:` and close the tool
+> [!NOTE]
+> Before you close this tool you can press Spritesheet and XML Generator (formerly SSAXMLG) button which will redirect to the FNF Spritesheet and XML Generator Web and then close the tool
+
+> [!NOTE]
+> If you select option resize a multiple images, a massage to appear that read `Image resizing completed successfully.`
 
 ---
 
@@ -82,6 +97,7 @@ After you have done the setup you should now need the following for this tool :
   - The reason I made this tool is because one of the feature is where can crop spritesheet but drawback is can increase file size so I decided to make a tool with adding a feature resize the image also reduce file size
 - Funker' Optimizer was originally is Divider XML PC which has unfortunately been removed since February 27th
 - Funker' Optimizer application icon is also inspired by Funkin' Optimizer application icon, except that the letters are combined and shaded
+- Since threading was removed in 1.1.1 the image resizing process may take a long time
 
 ---
 
