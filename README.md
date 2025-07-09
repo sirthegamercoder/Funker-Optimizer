@@ -89,7 +89,7 @@ After you have done the setup you should now need the following for this tool :
 - You can disable aliasing option if you want resize pixel sprite
 - Make sure choose latest version of this tool
 - You can use batch process button to modify multiple data files
-  - Also batch process image button to resize multiple images
+- In 1.1.1 if you click `Load Image` there will be two options, namely the first option to load a single image or the second option to load multiple images, besides that when you press `Resize Image` there will be two options again, namely the first option to resize a single image or the second option to resize multiple images.
  
 ---
 
