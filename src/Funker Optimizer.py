@@ -88,7 +88,7 @@ class FunkerOptimizer:
         self.modify_button.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
 
         self.github_button = tk.Button(self.button_frame, text="GitHub Repo", command=self.open_github_repo, font=("Segoe UI", 10))
-        self.github_button.grid(row=0, column=2, padx=5, pady=5)
+        self.github_button.grid(row=0, column=2, padx=5, pady=5, sticky="ew")
 
         self.bug_report_button = tk.Button(self.button_frame, text="Bug Report", command=self.bug_report, font=("Segoe UI", 10))
         self.bug_report_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
