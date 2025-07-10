@@ -1,0 +1,23 @@
+name: Bug report (Web)
+description: Report a bug of web version here
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe the bug here. (Must be detailed)"
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: "What browser did you use?"
+      options:
+        - Google Chrome
+        - Microsoft Edge
+        - Mozilla Firefox
+        - Safari
+        - Opera
+        - Other
+    validations:
+      required: true
