@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelProcessBtn = document.getElementById('cancel-process');
     const batchModal = document.getElementById('batch-modal');
     const batchInputFiles = document.getElementById('batch-input-files');
-    const batchOutputDir = document.getElementById('batch-output-dir');
+    const batchOutputFiles = document.getElementById('batch-output-files');
     const startBatchBtn = document.getElementById('start-batch');
     const closeBatchModal = document.querySelector('#batch-modal .close');
 
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function batchProcess() {
         const files = batchInputFiles.files;
-        const outputDirName = batchOutputDir.value.trim() || 'optimized_xml';
+        const outputFileName = batchOutputFiles.value.trim() || 'optimized_xml';
 
         if (files.length === 0) {
             showError('Please select at least one XML file.');
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
         progressText.textContent = '0%';
         
         const zip = new JSZip();
-        const folder = zip.folder(outputDirName);
+        const folder = zip.folder(outputFileName);
         let processedCount = 0;
         const totalFiles = files.length;
         const divisionFactor = parseInt(divisionNumber.value) || 2;
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const url = URL.createObjectURL(zipContent);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${outputDirName}.zip`;
+            a.download = `${outputFileName}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
