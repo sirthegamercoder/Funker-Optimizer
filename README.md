@@ -108,8 +108,10 @@ After you have done the setup you should now need the following for this tool :
 - In 1.1.1 if you click `Load Image` there will be two options, namely the first option to load a single image or the second option to load multiple images, besides that when you press `Resize Image` there will be two options again, namely the first option to resize a single image or the second option to resize multiple images.
  
 ---
-
-## Alternative Download
+## Alternatives
 ### GameBanana
 
 <a href="https://gamebanana.com/tools/19963"><img src="https://images.gamebanana.com/img/embeddables/Tool_19963_large.jpg?1749456793"/></a>
+
+### Web Version
+To use this tool, you can click [here](https://sirthegamercoder.github.io/Funker-Optimizer/)!
