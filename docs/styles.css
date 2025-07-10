@@ -528,7 +528,6 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-/* Modal styles */
 .modal {
     display: none;
     position: fixed;
@@ -595,7 +594,6 @@ input:checked + .slider:before {
     margin-top: 5px;
 }
 
-/* Responsive styles */
 @media (max-width: 992px) {
     main {
         flex-direction: column;
