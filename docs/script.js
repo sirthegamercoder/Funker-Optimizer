@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM elements
     const inputFile = document.getElementById('input-file');
     const outputFile = document.getElementById('output-file');
     const divisionNumber = document.getElementById('division-number');
@@ -37,13 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const startBatchBtn = document.getElementById('start-batch');
     const closeBatchModal = document.querySelector('#batch-modal .close');
 
-    // App state
     let currentImage = null;
     let loadedImages = [];
     let processing = false;
     let cancelRequested = false;
 
-    // Initialize theme
     function initTheme() {
         const savedTheme = localStorage.getItem('theme') || 
                          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -56,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('theme', theme);
     }
 
-    // Event listeners
     themeSwitch.addEventListener('change', () => {
         setTheme(themeSwitch.checked ? 'dark' : 'light');
     });
@@ -87,8 +83,8 @@ document.addEventListener('DOMContentLoaded', function() {
     loadImageBtn.addEventListener('click', loadImage);
     resizeImageBtn.addEventListener('click', () => {
         const percentage = parseInt(resizePercentage.value);
-        if (isNaN(percentage) || percentage <= 0 || percentage > 500) {
-            showError('Please enter a valid percentage between 1 and 500.');
+        if (isNaN(percentage) || percentage <= 0) {
+            showError('Please enter a valid percentage.');
             return;
         }
         
@@ -109,12 +105,10 @@ document.addEventListener('DOMContentLoaded', function() {
         addMessage('Process cancellation requested...');
     });
 
-    // Initialize the app
     initTheme();
     updateFileInputLabel();
     updateBatchFileInputLabel();
 
-    // Functions
     function addMessage(message) {
         const timestamp = new Date().toLocaleTimeString();
         messageText.value += `[${timestamp}] ${message}\n`;
@@ -177,7 +171,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(e.target.result, 'text/xml');
                 
-                // Check if parsing was successful
                 if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
                     throw new Error("Invalid XML file");
                 }
@@ -211,7 +204,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const serializer = new XMLSerializer();
                 const modifiedXml = serializer.serializeToString(xmlDoc);
                 
-                // Create download link
                 const blob = new Blob([modifiedXml], { type: 'text/xml' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -374,17 +366,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     imgElement.src = event.target.result;
                     imageContainer.appendChild(imgElement);
                     
-                    // Update metadata
                     imageDimensions.textContent = `${currentImage.width}×${currentImage.height}px`;
                     imageSize.textContent = `${formatFileSize(file.size)}`;
                     
-                    // Update info
                     imageInfo.textContent = file.name;
                     resizeImageBtn.disabled = false;
                     
                     addMessage(`Loaded image: ${file.name} (${currentImage.width}×${currentImage.height}, ${formatFileSize(file.size)})`);
                     
-                    // Switch to single image tab
                     switchTab('single');
                 };
                 currentImage.onerror = () => {
@@ -414,10 +403,8 @@ document.addEventListener('DOMContentLoaded', function() {
             let loadedCount = 0;
             let failedFiles = [];
             
-            // Clear previous images
             multiImageGrid.innerHTML = '';
             
-            // Show loading state
             const placeholder = multipleImagesContainer.querySelector('.placeholder');
             if (placeholder) placeholder.style.display = 'none';
 
@@ -427,7 +414,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     loadedImages.push(imgData);
                     loadedCount++;
                     
-                    // Create thumbnail
                     const imgItem = document.createElement('div');
                     imgItem.className = 'multi-image-item';
                     
@@ -448,7 +434,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // Update UI
             imagesCount.textContent = `${loadedCount} image${loadedCount !== 1 ? 's' : ''}`;
             resizeImageBtn.disabled = loadedCount === 0;
             
@@ -456,7 +441,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 imageInfo.textContent = `${loadedCount} image${loadedCount !== 1 ? 's' : ''} loaded`;
                 addMessage(`Successfully loaded ${loadedCount}/${files.length} images.`);
                 
-                // Switch to multiple images tab
                 switchTab('multiple');
             } else {
                 imageInfo.textContent = 'No images loaded';
@@ -510,7 +494,6 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.width = newWidth;
         canvas.height = newHeight;
         
-        // Apply aliasing based on checkbox
         ctx.imageSmoothingEnabled = aliasingCheckbox.checked;
         ctx.imageSmoothingQuality = aliasingCheckbox.checked ? 'high' : 'low';
         
@@ -518,12 +501,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         addMessage(`Resizing image to ${percentage}% (${newWidth}×${newHeight})...`);
         
-        // Create download link
         canvas.toBlob(blob => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `resized_${imageInfo.textContent}`;
+            a.download = `${imageInfo.textContent}`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -610,7 +592,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const url = URL.createObjectURL(zipContent);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `resized_images_${percentage}percent.zip`;
+            a.download = `resized_images.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
