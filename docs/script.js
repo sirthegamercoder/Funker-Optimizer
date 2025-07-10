@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const modifyXmlBtn = document.getElementById('modify-xml');
     const githubRepoBtn = document.getElementById('github-repo');
     const bugReportBtn = document.getElementById('bug-report');
-    const spritesheetGeneratorBtn = document.getElementById('spritesheet-generator');
+    const spritesheetAndXMLGeneratorBtn = document.getElementById('spritesheet-and-xml-generator');
     const messageText = document.getElementById('message-text');
     const clearMessagesBtn = document.getElementById('clear-messages');
     const copyMessagesBtn = document.getElementById('copy-messages');
