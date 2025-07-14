@@ -123,23 +123,31 @@ document.addEventListener('DOMContentLoaded', function() {
         window.open(url, '_blank');
     }
 
-    function updateFileInputLabel() {
-        const label = inputFile.nextElementSibling;
-        if (inputFile.files.length > 0) {
-            label.textContent = inputFile.files[0].name;
-        } else {
-            label.textContent = 'Choose file...';
-        }
+function updateFileInputLabel() {
+    const label = document.querySelector('.file-input-label');
+    if (inputFile.files.length > 0) {
+        label.textContent = inputFile.files[0].name;
+    } else {
+        label.textContent = 'No file selected';
     }
+}
 
-    function updateBatchFileInputLabel() {
-        const label = batchInputFiles.nextElementSibling;
-        if (batchInputFiles.files.length > 0) {
-            label.textContent = `${batchInputFiles.files.length} files selected`;
-        } else {
-            label.textContent = 'Choose files...';
-        }
+document.querySelector('.file-input-button').addEventListener('click', function() {
+    inputFile.click();
+});
+
+function updateBatchFileInputLabel() {
+    const label = document.querySelector('#batch-modal .file-input-label');
+    if (batchInputFiles.files.length > 0) {
+        label.textContent = `${batchInputFiles.files.length} files selected`;
+    } else {
+        label.textContent = 'No files selected';
     }
+}
+
+document.querySelector('#batch-modal .file-input-button').addEventListener('click', function() {
+    batchInputFiles.click();
+});
 
     function switchTab(tabName) {
         singleImageTab.classList.toggle('active', tabName === 'single');
