@@ -21,3 +21,12 @@ body:
         - Other
     validations:
       required: true
+  - type: dropdown
+    id: device
+    attributes:
+      label: "What device did you use?"
+      options:
+        - Mobile
+        - PC
+    validations:
+      required: true
