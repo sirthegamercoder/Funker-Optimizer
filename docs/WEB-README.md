@@ -15,4 +15,4 @@
 
 5. Next, scroll down and press the `Load Image` button
 > [!TIP]
-> When you press the button, this will appear `sirthegamercoder.github.io stating` and underneath it reads `Load a single image (OK) or multiple images (Cancel)?` If you want to load a single image, just click OK, but if you want to load multiple images, click Cancel.
+> When you press the button, this will appear `sirthegamercoder.github.io says` and underneath it reads `Load a single image (OK) or multiple images (Cancel)?` If you want to load a single image, just click OK, but if you want to load multiple images, click Cancel.
