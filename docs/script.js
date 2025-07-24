@@ -114,6 +114,10 @@ document.addEventListener('DOMContentLoaded', function() {
         setTheme(savedTheme);
     }
 
+    document.getElementById('language-select').addEventListener('change', function() {
+    updateLanguage(this.value);
+});
+
     function updateLanguage(lang) {
     currentLanguage = lang;
     localStorage.setItem('language', lang);
@@ -149,16 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('label[for="batch-input-files"]').innerHTML = `<i class="fas fa-file-upload"></i>${t.selectXmlFiles}`;
     document.querySelector('label[for="batch-folder-name"]').innerHTML = `<i class="fas fa-folder"></i>${t.folderName}`;
     document.getElementById('start-batch').innerHTML = `<i class="fas fa-play"></i>${t.startProcessing}`;
-    
-    document.getElementById('language-select').addEventListener('change', function()
-    {
 
-        updateLanguage(this.value);
-    });
-
-    document.getElementById('language-select').value = currentLanguage;
-    updateLanguage(currentLanguage);
-    
     updateFileInputLabels();
 }
 
@@ -241,6 +236,7 @@ function updateFileInputLabels() {
     initTheme();
     updateFileInputLabel();
     updateBatchFileInputLabel();
+    updateLanguage(currentLanguage);
 
 function addMessage(message) {
     const timestamp = new Date().toLocaleTimeString();
