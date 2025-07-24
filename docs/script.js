@@ -30,10 +30,11 @@ document.addEventListener('DOMContentLoaded', function() {
         folderName: "Folder Name:",
         startProcessing: "Start Processing",
         noFileSelected: "No file selected",
-        filesSelected: "files selected"
+        filesSelected: "files selected",
+        errorPrefix: "ERROR"
     },
     es: {
-        title: "Funker' Optimizador",
+        title: "Optimizador Funker'",
         xmlProcessor: "Procesador XML",
         inputXmlFile: "Archivo XML de entrada:",
         outputFileName: "Nombre del archivo de salida:",
@@ -50,11 +51,11 @@ document.addEventListener('DOMContentLoaded', function() {
         imageProcessor: "Procesador de imágenes",
         loadImage: "Cargar imagen",
         resize: "Redimensionar",
-        aliasing: "Anti-saliado",
+        aliasing: "Anti-aliasing",
         resizePercentage: "Redimensionar %:",
         noImageLoaded: "No hay imagen cargada",
         singleImage: "Imagen única",
-        multipleImages: "Múltiples imágenes",
+        multipleImages: "Imágenes múltiples",
         processingFiles: "Procesando archivos",
         cancel: "Cancelar",
         batchOptions: "Opciones de proceso por lotes",
@@ -62,9 +63,11 @@ document.addEventListener('DOMContentLoaded', function() {
         folderName: "Nombre de carpeta:",
         startProcessing: "Iniciar procesamiento",
         noFileSelected: "Ningún archivo seleccionado",
-        filesSelected: "archivos seleccionados"
+        filesSelected: "archivos seleccionados",
+        errorPrefix: "ERROR"
     }
 };
+
     const inputFile = document.getElementById('input-file');
     const outputFile = document.getElementById('output-file');
     const divisionNumber = document.getElementById('division-number');
@@ -144,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('resize-image').innerHTML = `<i class="fas fa-expand-alt"></i>${t.resize}`;
     document.querySelector('label[for="aliasing"]').innerHTML = `<i class="fas fa-magic"></i>${t.aliasing}`;
     document.querySelector('label[for="resize-percentage"]').textContent = `${t.resizePercentage}`;
-    document.querySelector('.placeholder p').textContent = t.noImageLoaded;
+    document.querySelectorAll('.placeholder p').forEach(el => el.textContent = t.noImageLoaded);
     document.querySelector('[data-tab="single"]').textContent = t.singleImage;
     document.querySelector('[data-tab="multiple"]').textContent = t.multipleImages;
     document.querySelector('#progress-modal h3').innerHTML = `<i class="fas fa-spinner fa-spin"></i>${t.processingFiles}`;
