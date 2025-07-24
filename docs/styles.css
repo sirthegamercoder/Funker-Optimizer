@@ -613,6 +613,20 @@ input:checked + .slider:before {
     transition: width 0.3s;
 }
 
+.language-selector {
+    margin-left: 15px;
+}
+
+.language-selector select {
+    padding: 5px 10px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
 #current-file {
     font-size: 13px;
     color: var(--placeholder-color);
