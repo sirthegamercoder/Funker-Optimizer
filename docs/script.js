@@ -273,6 +273,8 @@ document.addEventListener('DOMContentLoaded', function() {
         setTheme(savedTheme);
     }
 
+    switchTab('single');
+
     document.getElementById('language-select').addEventListener('change', function() {
     updateLanguage(this.value);
 });
@@ -329,16 +331,20 @@ function updateFileInputLabels() {
     const singleFileLabel = document.querySelector('.file-input-label');
     const batchFileLabel = document.querySelector('#batch-modal .file-input-label');
     
-    if (inputFile.files.length > 0) {
-        singleFileLabel.textContent = inputFile.files[0].name;
-    } else {
-        singleFileLabel.textContent = t.noFileSelected;
+    if (singleFileLabel) {
+        if (inputFile.files.length > 0) {
+            singleFileLabel.textContent = inputFile.files[0].name;
+        } else {
+            singleFileLabel.textContent = t.noFileSelected;
+        }
     }
     
-    if (batchInputFiles.files.length > 0) {
-        batchFileLabel.textContent = `${batchInputFiles.files.length} ${t.filesSelected}`;
-    } else {
-        batchFileLabel.textContent = t.noFileSelected;
+    if (batchFileLabel) {
+        if (batchInputFiles.files.length > 0) {
+            batchFileLabel.textContent = `${batchInputFiles.files.length} ${t.filesSelected}`;
+        } else {
+            batchFileLabel.textContent = t.noFileSelected;
+        }
     }
 }
 
@@ -435,12 +441,21 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
     batchInputFiles.click();
 });
 
-    function switchTab(tabName) {
-        singleImageTab.classList.toggle('active', tabName === 'single');
-        multipleImageTab.classList.toggle('active', tabName === 'multiple');
-        singleImageContainer.classList.toggle('active', tabName === 'single');
-        multipleImagesContainer.classList.toggle('active', tabName === 'multiple');
+function switchTab(tabName) {
+    singleImageTab.classList.toggle('active', tabName === 'single');
+    multipleImageTab.classList.toggle('active', tabName === 'multiple');
+    singleImageContainer.classList.toggle('active', tabName === 'single');
+    multipleImagesContainer.classList.toggle('active', tabName === 'multiple');
+    
+    const t = translations[currentLanguage];
+    if (tabName === 'single' && currentImage) {
+        imageInfo.textContent = currentImage.name || 'Image';
+    } else if (tabName === 'multiple') {
+        const count = loadedImages.length;
+        imagesCount.textContent = `${count} ${count !== 1 ? t.images : t.image}`;
+        imageInfo.textContent = count > 0 ? `${count} ${count !== 1 ? t.images : t.image}` : t.noImageLoaded;
     }
+}
 
     function modifyXml() {
         const file = inputFile.files[0];
@@ -656,9 +671,10 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
                 currentImage.src = event.target.result;
                 currentImage.onload = () => {
                     imageContainer.innerHTML = '';
-                    const imgElement = document.createElement('img');
                     imgElement.src = event.target.result;
                     imageContainer.appendChild(imgElement);
+
+                    currentImage.name = file.name;
                     
                     imageDimensions.textContent = `${currentImage.width}×${currentImage.height}px`;
                     imageSize.textContent = `${formatFileSize(file.size)}`;
@@ -684,6 +700,7 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
     }
 
     function loadMultipleImages() {
+        const t = translations[currentLanguage];
         const input = document.createElement('input');
         input.type = 'file';
         input.multiple = true;
