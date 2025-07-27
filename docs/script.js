@@ -305,7 +305,9 @@ function updateLanguage(lang) {
     document.getElementById('resize-image').innerHTML = `<i class="fas fa-expand-alt"></i>${t.resize}`;
     document.querySelector('label[for="aliasing"]').innerHTML = `<i class="fas fa-magic"></i>${t.aliasing}`;
     document.querySelector('label[for="resize-percentage"]').textContent = `${t.resizePercentage}`;
+    
     document.querySelectorAll('.placeholder p').forEach(el => el.textContent = t.noImageLoaded);
+    
     document.querySelector('[data-tab="single"]').textContent = t.singleImage;
     document.querySelector('[data-tab="multiple"]').textContent = t.multipleImages;
     document.querySelector('#progress-modal h3').innerHTML = `<i class="fas fa-spinner fa-spin"></i>${t.processingFiles}`;
@@ -320,10 +322,9 @@ function updateLanguage(lang) {
     if (loadedImages.length > 0) {
         const count = loadedImages.length;
         imagesCount.textContent = `${count} ${count !== 1 ? t.images : t.image}`;
-        
+    }
+    
     updateFileInputLabels();
-
-    }   
 }
 
 function updateFileInputLabels() {
