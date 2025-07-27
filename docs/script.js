@@ -31,6 +31,10 @@ document.addEventListener('DOMContentLoaded', function() {
         startProcessing: "Start Processing",
         noFileSelected: "No file selected",
         filesSelected: "files selected",
+        chooseFile: "Choose file...",
+        chooseFiles: "Choose files...",
+        images: "images",
+        image: "image",
         errorPrefix: "ERROR"
     },
     es: {
@@ -64,6 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
         startProcessing: "Iniciar procesamiento",
         noFileSelected: "Ningún archivo seleccionado",
         filesSelected: "archivos seleccionados",
+        chooseFile: "Seleccionar archivo...",
+        chooseFiles: "Seleccionar archivos...",
+        images: "imágenes",
+        image: "imagen",
         errorPrefix: "ERROR"
     },
     fr: {
@@ -97,6 +105,10 @@ document.addEventListener('DOMContentLoaded', function() {
         startProcessing: "Début du traitement",
         noFileSelected: "Aucun fichier sélectionné",
         filesSelected: "fichiers sélectionnés",
+        chooseFile: "Choisir un fichier...",
+        chooseFiles: "Choisir des fichiers...",
+        images: "images",
+        image: "image",
         errorPrefix: "ERREUR"
     },
     ptBR: {
@@ -130,6 +142,10 @@ document.addEventListener('DOMContentLoaded', function() {
         startProcessing: "Iniciar processamento",
         noFileSelected: "Nenhum arquivo selecionado",
         filesSelected: "arquivos selecionados",
+        chooseFile: "Escolher arquivo...",
+        chooseFiles: "Escolher arquivos...",
+        images: "imagens",
+        image: "imagem",
         errorPrefix: "ERRO"
     },
     it: {
@@ -163,6 +179,10 @@ document.addEventListener('DOMContentLoaded', function() {
         startProcessing: "Avvio dell'elaborazione",
         noFileSelected: "Nessun file selezionato",
         filesSelected: "file selezionati",
+        chooseFile: "Scegli file...",
+        chooseFiles: "Scegli files...",
+        images: "immagini",
+        image: "immagine",
         errorPrefix: "ERRORE"
     },
     de: {
@@ -196,6 +216,10 @@ document.addEventListener('DOMContentLoaded', function() {
         startProcessing: "Beginn der Bearbeitung",
         noFileSelected: "Keine Datei gewählt",
         filesSelected: "ausgewählte Dateien",
+        chooseFile: "Datei auswählen...",
+        chooseFiles: "Dateien auswählen...",
+        images: "Bilder",
+        image: "Bild",
         errorPrefix: "FEHLER"
     }
 };
@@ -253,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateLanguage(this.value);
 });
 
-    function updateLanguage(lang) {
+function updateLanguage(lang) {
     currentLanguage = lang;
     localStorage.setItem('language', lang);
     
@@ -288,8 +312,16 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('label[for="batch-input-files"]').innerHTML = `<i class="fas fa-file-upload"></i>${t.selectXmlFiles}`;
     document.querySelector('label[for="batch-folder-name"]').innerHTML = `<i class="fas fa-folder"></i>${t.folderName}`;
     document.getElementById('start-batch').innerHTML = `<i class="fas fa-play"></i>${t.startProcessing}`;
+    document.querySelector('.file-input-button').innerHTML = `<i class="fas fa-folder-open"></i>${t.chooseFile}`;
+    document.querySelector('#batch-modal .file-input-button').innerHTML = `<i class="fas fa-folder-open"></i>${t.chooseFiles}`;
 
+    if (loadedImages.length > 0) {
+        const count = loadedImages.length;
+        imagesCount.textContent = `${count} ${count !== 1 ? t.images : t.image}`;
+        
     updateFileInputLabels();
+
+    }   
 }
 
 function updateFileInputLabels() {
@@ -696,7 +728,7 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
                 }
             }
 
-            imagesCount.textContent = `${loadedCount} image${loadedCount !== 1 ? 's' : ''}`;
+            imagesCount.textContent = `${loadedCount} ${loadedCount !== 1 ? t.images : t.image}`;
             resizeImageBtn.disabled = loadedCount === 0;
             
             if (loadedCount > 0) {
