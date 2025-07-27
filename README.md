@@ -1,3 +1,8 @@
+# ANNOUNCEMENT
+> [!WARNING]
+> This repository has been archived because I am very tired, so I decided to delete the site, but you can still download the tools as usual.
+
+
 # Funker' Optimizer 
 A tool that can optimize large spritesheet into small for Friday Night Funkin' (FNF). Is perfect if optimizing spritesheet using a PC, especially for you who are a optimizer using a PC.
 
@@ -57,10 +62,7 @@ After you have done the setup you should now need the following for this tool :
 > [!TIP]
 > When click `Resize Image` there is a two options again, resize a single image or resize a multiple images. You can select thay options again if you want resize a single image or multiple images
 
-13. Enter the percentage number (Without %)
-> [!CAUTION]
-> DO NOT ENTER A PERCENTAGE NUMBER OF MORE THAN 50 THIS HAS BEEN EXPLAINED IN `ReadMe.txt` on `art` folder
-
+13. Enter the percentage number
 14. Click on image file and save it
 > [!TIP]
 > If you are asked to replace it like massage `Do you want to replace it?` just click `Yes`
