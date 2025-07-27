@@ -30,15 +30,10 @@ document.addEventListener('DOMContentLoaded', function() {
         folderName: "Folder Name:",
         startProcessing: "Start Processing",
         noFileSelected: "No file selected",
-        filesSelected: "files selected",
-        chooseFile: "Choose file...",
-        chooseFiles: "Choose files...",
-        images: "images",
-        image: "image",
-        errorPrefix: "ERROR"
+        filesSelected: "files selected"
     },
     es: {
-        title: "Optimizador Funker'",
+        title: "Funker' Optimizador",
         xmlProcessor: "Procesador XML",
         inputXmlFile: "Archivo XML de entrada:",
         outputFileName: "Nombre del archivo de salida:",
@@ -55,11 +50,11 @@ document.addEventListener('DOMContentLoaded', function() {
         imageProcessor: "Procesador de imágenes",
         loadImage: "Cargar imagen",
         resize: "Redimensionar",
-        aliasing: "Anti-aliasing",
+        aliasing: "Anti-saliado",
         resizePercentage: "Redimensionar %:",
         noImageLoaded: "No hay imagen cargada",
         singleImage: "Imagen única",
-        multipleImages: "Imágenes múltiples",
+        multipleImages: "Múltiples imágenes",
         processingFiles: "Procesando archivos",
         cancel: "Cancelar",
         batchOptions: "Opciones de proceso por lotes",
@@ -67,163 +62,9 @@ document.addEventListener('DOMContentLoaded', function() {
         folderName: "Nombre de carpeta:",
         startProcessing: "Iniciar procesamiento",
         noFileSelected: "Ningún archivo seleccionado",
-        filesSelected: "archivos seleccionados",
-        chooseFile: "Seleccionar archivo...",
-        chooseFiles: "Seleccionar archivos...",
-        images: "imágenes",
-        image: "imagen",
-        errorPrefix: "ERROR"
-    },
-    fr: {
-        title: "Optimiseur Funker'",
-        xmlProcessor: "Traitement XML",
-        inputXmlFile: "Fichier XML d'entrée:",
-        outputFileName: "Nom du fichier de sortie:",
-        divisionFactor: "Facteur de répartition:",
-        modifyXml: "Modifier le XML",
-        batchProcess: "Processus par lots",
-        quickLinks: "Liens Rapides",
-        githubRepo: "Répertoire GitHub",
-        bugReport: "Rapport de bogues",
-        spritesheetGenerator: "Générateur de feuilles de calcul et de XML",
-        messages: "Les messages",
-        clear: "Clair",
-        copy: "Copie",
-        imageProcessor: "Traitement d'images",
-        loadImage: "Chargement de l'image",
-        resize: "Redimensionner",
-        aliasing: "Anticrénelage",
-        resizePercentage: "Redimensionner %:",
-        noImageLoaded: "Aucune image chargée",
-        singleImage: "Une seule image",
-        multipleImages: "Plusieurs images",
-        processingFiles: "Traitement des dossiers",
-        cancel: "Annuler",
-        batchOptions: "Options de traitement par lots",
-        selectXmlFiles: "Sélectionner les fichiers XML:",
-        folderName: "Nom du dossier:",
-        startProcessing: "Début du traitement",
-        noFileSelected: "Aucun fichier sélectionné",
-        filesSelected: "fichiers sélectionnés",
-        chooseFile: "Choisir un fichier...",
-        chooseFiles: "Choisir des fichiers...",
-        images: "images",
-        image: "image",
-        errorPrefix: "ERREUR"
-    },
-    ptBR: {
-        title: "Otimizador do Funker'",
-        xmlProcessor: "Processador de XML",
-        inputXmlFile: "Arquivo XML de entrada:",
-        outputFileName: "Nome do arquivo de saída:",
-        divisionFactor: "Fator de divisão:",
-        modifyXml: "Modificar XML",
-        batchProcess: "Processo em lote",
-        quickLinks: "Links Rápidos",
-        githubRepo: "Repositório do GitHub",
-        bugReport: "Relatório de Bugs",
-        spritesheetGenerator: "Gerador de XML e planilha de sprites",
-        messages: "Recados",
-        clear: "Limpo",
-        copy: "Copiar",
-        imageProcessor: "Processador de imagens",
-        loadImage: "Carregar Imagem",
-        resize: "Redimensionamento",
-        aliasing: "Suavização de serrilhado",
-        resizePercentage: "Redimensionamento %:",
-        noImageLoaded: "Nenhuma imagem carregada",
-        singleImage: "Imagem única",
-        multipleImages: "Várias imagens",
-        processingFiles: "Processamento de arquivos",
-        cancel: "Cancelar",
-        batchOptions: "Opções de processo em lote",
-        selectXmlFiles: "Selecionar arquivos XML:",
-        folderName: "Nome da pasta:",
-        startProcessing: "Iniciar processamento",
-        noFileSelected: "Nenhum arquivo selecionado",
-        filesSelected: "arquivos selecionados",
-        chooseFile: "Escolher arquivo...",
-        chooseFiles: "Escolher arquivos...",
-        images: "imagens",
-        image: "imagem",
-        errorPrefix: "ERRO"
-    },
-    it: {
-        title: "Ottimizzatore Funker'",
-        xmlProcessor: "Processore XML",
-        inputXmlFile: "File XML in ingresso:",
-        outputFileName: "Nome del file di uscita:",
-        divisionFactor: "Fattore di Divisione:",
-        modifyXml: "Modifica XML",
-        batchProcess: "Processo in lotti",
-        quickLinks: "Collegamenti rapidi",
-        githubRepo: "GitHub Repo",
-        bugReport: "Rapporto bug",
-        spritesheetGenerator: "Generatore di fogli di testo e XML",
-        messages: "Messaggi",
-        clear: "Libero",
-        copy: "Copiare",
-        imageProcessor: "Processore d'immagine",
-        loadImage: "Caricare l'immagine",
-        resize: "Ridimensiona",
-        aliasing: "Anti-alias",
-        resizePercentage: "Ridimensiona %:",
-        noImageLoaded: "Nessuna immagine caricata",
-        singleImage: "Immagine singola",
-        multipleImages: "Immagini multiple",
-        processingFiles: "Elaborazione dei file",
-        cancel: "Annullamento",
-        batchOptions: "Opzioni del processo batch",
-        selectXmlFiles: "Selezionare i file XML:",
-        folderName: "Nome della cartella:",
-        startProcessing: "Avvio dell'elaborazione",
-        noFileSelected: "Nessun file selezionato",
-        filesSelected: "file selezionati",
-        chooseFile: "Scegli file...",
-        chooseFiles: "Scegli files...",
-        images: "immagini",
-        image: "immagine",
-        errorPrefix: "ERRORE"
-    },
-    de: {
-        title: "Funker' Optimierer",
-        xmlProcessor: "XML Prozessor",
-        inputXmlFile: "Input XML Datei:",
-        outputFileName: "Name der Ausgabedatei:",
-        divisionFactor: "Teilung Faktor:",
-        modifyXml: "XML ändern",
-        batchProcess: "Batch Prozess",
-        quickLinks: "Kurzlinks",
-        githubRepo: "GitHub Repositorium",
-        bugReport: "Fehler Bericht",
-        spritesheetGenerator: "Spritesheet und XML Generatoren",
-        messages: "Nachrichten",
-        clear: "Klar",
-        copy: "Kopieren",
-        imageProcessor: "Bildprozessor",
-        loadImage: "Bild laden",
-        resize: "Größe ändern",
-        aliasing: "Kantenglättung",
-        resizePercentage: "Größe ändern %:",
-        noImageLoaded: "Kein Bild geladen",
-        singleImage: "Einzelnes Bild",
-        multipleImages: "Mehrere Abbildungen",
-        processingFiles: "Bearbeitung von Dateien",
-        cancel: "Abbrechen",
-        batchOptions: "Stapelverarbeitungsoptionen",
-        selectXmlFiles: "XML Dateien auswählen:",
-        folderName: "Name des Ordners:",
-        startProcessing: "Beginn der Bearbeitung",
-        noFileSelected: "Keine Datei gewählt",
-        filesSelected: "ausgewählte Dateien",
-        chooseFile: "Datei auswählen...",
-        chooseFiles: "Dateien auswählen...",
-        images: "Bilder",
-        image: "Bild",
-        errorPrefix: "FEHLER"
+        filesSelected: "archivos seleccionados"
     }
 };
-
     const inputFile = document.getElementById('input-file');
     const outputFile = document.getElementById('output-file');
     const divisionNumber = document.getElementById('division-number');
@@ -265,7 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let loadedImages = [];
     let processing = false;
     let cancelRequested = false;
-    let currentLanguage = localStorage.getItem('language') || 'en';
 
     function initTheme() {
         const savedTheme = localStorage.getItem('theme') || 
@@ -273,13 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTheme(savedTheme);
     }
 
-    switchTab('single');
-
-    document.getElementById('language-select').addEventListener('change', function() {
-    updateLanguage(this.value);
-});
-
-function updateLanguage(lang) {
+    function updateLanguage(lang) {
     currentLanguage = lang;
     localStorage.setItem('language', lang);
     
@@ -305,11 +139,7 @@ function updateLanguage(lang) {
     document.getElementById('resize-image').innerHTML = `<i class="fas fa-expand-alt"></i>${t.resize}`;
     document.querySelector('label[for="aliasing"]').innerHTML = `<i class="fas fa-magic"></i>${t.aliasing}`;
     document.querySelector('label[for="resize-percentage"]').textContent = `${t.resizePercentage}`;
-    
-    document.querySelectorAll('.placeholder').forEach(el => {
-        el.innerHTML = `<i class="fas fa-image"></i><p>${t.noImageLoaded}</p>`;
-    });
-    
+    document.querySelector('.placeholder p').textContent = t.noImageLoaded;
     document.querySelector('[data-tab="single"]').textContent = t.singleImage;
     document.querySelector('[data-tab="multiple"]').textContent = t.multipleImages;
     document.querySelector('#progress-modal h3').innerHTML = `<i class="fas fa-spinner fa-spin"></i>${t.processingFiles}`;
@@ -318,13 +148,15 @@ function updateLanguage(lang) {
     document.querySelector('label[for="batch-input-files"]').innerHTML = `<i class="fas fa-file-upload"></i>${t.selectXmlFiles}`;
     document.querySelector('label[for="batch-folder-name"]').innerHTML = `<i class="fas fa-folder"></i>${t.folderName}`;
     document.getElementById('start-batch').innerHTML = `<i class="fas fa-play"></i>${t.startProcessing}`;
-    document.querySelector('.file-input-button').innerHTML = `<i class="fas fa-folder-open"></i>${t.chooseFile}`;
-    document.querySelector('#batch-modal .file-input-button').innerHTML = `<i class="fas fa-folder-open"></i>${t.chooseFiles}`;
+    
+    document.getElementById('language-select').addEventListener('change', function()
+    {
 
-    if (loadedImages.length > 0) {
-        const count = loadedImages.length;
-        imagesCount.textContent = `${count} ${count !== 1 ? t.images : t.image}`;
-    }
+        updateLanguage(this.value);
+    });
+
+    document.getElementById('language-select').value = currentLanguage;
+    updateLanguage(currentLanguage);
     
     updateFileInputLabels();
 }
@@ -334,20 +166,16 @@ function updateFileInputLabels() {
     const singleFileLabel = document.querySelector('.file-input-label');
     const batchFileLabel = document.querySelector('#batch-modal .file-input-label');
     
-    if (singleFileLabel) {
-        if (inputFile.files.length > 0) {
-            singleFileLabel.textContent = inputFile.files[0].name;
-        } else {
-            singleFileLabel.textContent = t.noFileSelected;
-        }
+    if (inputFile.files.length > 0) {
+        singleFileLabel.textContent = inputFile.files[0].name;
+    } else {
+        singleFileLabel.textContent = t.noFileSelected;
     }
     
-    if (batchFileLabel) {
-        if (batchInputFiles.files.length > 0) {
-            batchFileLabel.textContent = `${batchInputFiles.files.length} ${t.filesSelected}`;
-        } else {
-            batchFileLabel.textContent = t.noFileSelected;
-        }
+    if (batchInputFiles.files.length > 0) {
+        batchFileLabel.textContent = `${batchInputFiles.files.length} ${t.filesSelected}`;
+    } else {
+        batchFileLabel.textContent = t.noFileSelected;
     }
 }
 
@@ -414,22 +242,27 @@ function updateFileInputLabels() {
     updateBatchFileInputLabel();
     updateLanguage(currentLanguage);
 
-function addMessage(message) {
-    const timestamp = new Date().toLocaleTimeString();
-    messageText.value += `[${timestamp}] ${message}\n`;
-    messageText.scrollTop = messageText.scrollHeight;
-}
+    function addMessage(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        messageText.value += `[${timestamp}] ${message}\n`;
+        messageText.scrollTop = messageText.scrollHeight;
+    }
 
-function showError(message) {
-    addMessage(`${translations[currentLanguage].errorPrefix || 'ERROR'}: ${message}`);
-}
+    function showError(message) {
+        addMessage(`ERROR: ${message}`);
+    }
 
     function openUrl(url) {
         window.open(url, '_blank');
     }
 
 function updateFileInputLabel() {
-    updateFileInputLabels();
+    const label = document.querySelector('.file-input-label');
+    if (inputFile.files.length > 0) {
+        label.textContent = inputFile.files[0].name;
+    } else {
+        label.textContent = 'No file selected';
+    }
 }
 
 document.querySelector('.file-input-button').addEventListener('click', function() {
@@ -437,7 +270,12 @@ document.querySelector('.file-input-button').addEventListener('click', function(
 });
 
 function updateBatchFileInputLabel() {
-    updateFileInputLabels();
+    const label = document.querySelector('#batch-modal .file-input-label');
+    if (batchInputFiles.files.length > 0) {
+        label.textContent = `${batchInputFiles.files.length} files selected`;
+    } else {
+        label.textContent = 'No files selected';
+    }
 }
 
 document.querySelector('#batch-modal .file-input-button').addEventListener('click', function() {
