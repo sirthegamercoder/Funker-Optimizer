@@ -307,8 +307,8 @@ function updateLanguage(lang) {
     document.querySelector('label[for="resize-percentage"]').textContent = `${t.resizePercentage}`;
     
     document.querySelectorAll('.placeholder').forEach(el => {
-    el.innerHTML = `<i class="fas fa-image"></i><p>${t.noImageLoaded}</p>`;
-});
+        el.innerHTML = `<i class="fas fa-image"></i><p>${t.noImageLoaded}</p>`;
+    });
     
     document.querySelector('[data-tab="single"]').textContent = t.singleImage;
     document.querySelector('[data-tab="multiple"]').textContent = t.multipleImages;
