@@ -306,7 +306,9 @@ function updateLanguage(lang) {
     document.querySelector('label[for="aliasing"]').innerHTML = `<i class="fas fa-magic"></i>${t.aliasing}`;
     document.querySelector('label[for="resize-percentage"]').textContent = `${t.resizePercentage}`;
     
-    document.querySelectorAll('.placeholder p').forEach(el => el.textContent = t.noImageLoaded);
+    document.querySelectorAll('.placeholder').forEach(el => {
+    el.innerHTML = `<i class="fas fa-image"></i><p>${t.noImageLoaded}</p>`;
+});
     
     document.querySelector('[data-tab="single"]').textContent = t.singleImage;
     document.querySelector('[data-tab="multiple"]').textContent = t.multipleImages;
@@ -718,7 +720,10 @@ function switchTab(tabName) {
             multiImageGrid.innerHTML = '';
             
             const placeholder = multipleImagesContainer.querySelector('.placeholder');
-            if (placeholder) placeholder.style.display = 'none';
+            if (placeholder) {
+                placeholder.style.display = 'none';
+                placeholder.innerHTML = `<i class="fas fa-image"></i><p>${translations[currentLanguage].noImageLoaded}</p>`;
+}
 
             for (const file of files) {
                 try {
