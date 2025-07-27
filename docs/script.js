@@ -1,70 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const translations = {
-    en: {
-        title: "Funker' Optimizer",
-        xmlProcessor: "XML Processor",
-        inputXmlFile: "Input XML File:",
-        outputFileName: "Output File Name:",
-        divisionFactor: "Division Factor:",
-        modifyXml: "Modify XML",
-        batchProcess: "Batch Process",
-        quickLinks: "Quick Links",
-        githubRepo: "GitHub Repo",
-        bugReport: "Bug Report",
-        spritesheetGenerator: "Spritesheet and XML Generator",
-        messages: "Messages",
-        clear: "Clear",
-        copy: "Copy",
-        imageProcessor: "Image Processor",
-        loadImage: "Load Image",
-        resize: "Resize",
-        aliasing: "Anti-aliasing",
-        resizePercentage: "Resize %:",
-        noImageLoaded: "No image loaded",
-        singleImage: "Single Image",
-        multipleImages: "Multiple Images",
-        processingFiles: "Processing Files",
-        cancel: "Cancel",
-        batchOptions: "Batch Process Options",
-        selectXmlFiles: "Select XML Files:",
-        folderName: "Folder Name:",
-        startProcessing: "Start Processing",
-        noFileSelected: "No file selected",
-        filesSelected: "files selected"
-    },
-    es: {
-        title: "Funker' Optimizador",
-        xmlProcessor: "Procesador XML",
-        inputXmlFile: "Archivo XML de entrada:",
-        outputFileName: "Nombre del archivo de salida:",
-        divisionFactor: "Factor de división:",
-        modifyXml: "Modificar XML",
-        batchProcess: "Proceso por lotes",
-        quickLinks: "Enlaces rápidos",
-        githubRepo: "Repositorio GitHub",
-        bugReport: "Reportar error",
-        spritesheetGenerator: "Generador de Spritesheet y XML",
-        messages: "Mensajes",
-        clear: "Limpiar",
-        copy: "Copiar",
-        imageProcessor: "Procesador de imágenes",
-        loadImage: "Cargar imagen",
-        resize: "Redimensionar",
-        aliasing: "Anti-saliado",
-        resizePercentage: "Redimensionar %:",
-        noImageLoaded: "No hay imagen cargada",
-        singleImage: "Imagen única",
-        multipleImages: "Múltiples imágenes",
-        processingFiles: "Procesando archivos",
-        cancel: "Cancelar",
-        batchOptions: "Opciones de proceso por lotes",
-        selectXmlFiles: "Seleccionar archivos XML:",
-        folderName: "Nombre de carpeta:",
-        startProcessing: "Iniciar procesamiento",
-        noFileSelected: "Ningún archivo seleccionado",
-        filesSelected: "archivos seleccionados"
-    }
-};
     const inputFile = document.getElementById('input-file');
     const outputFile = document.getElementById('output-file');
     const divisionNumber = document.getElementById('division-number');
@@ -112,72 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
                          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         setTheme(savedTheme);
     }
-
-    function updateLanguage(lang) {
-    currentLanguage = lang;
-    localStorage.setItem('language', lang);
-    
-    const t = translations[lang];
-    
-    document.querySelector('h1').innerHTML = `<i class="fas fa-tools"></i>${t.title}`;
-    document.querySelectorAll('h2')[0].innerHTML = `<i class="fas fa-file-code"></i>${t.xmlProcessor}`;
-    document.querySelectorAll('h2')[1].innerHTML = `<i class="fas fa-link"></i>${t.quickLinks}`;
-    document.querySelectorAll('h2')[2].innerHTML = `<i class="fas fa-comment-alt"></i>${t.messages}`;
-    document.querySelectorAll('h2')[3].innerHTML = `<i class="fas fa-image"></i>${t.imageProcessor}`;
-    
-    document.querySelector('label[for="input-file"]').innerHTML = `<i class="fas fa-file-upload"></i>${t.inputXmlFile}`;
-    document.querySelector('label[for="output-file"]').innerHTML = `<i class="fas fa-file-export"></i>${t.outputFileName}`;
-    document.querySelector('label[for="division-number"]').innerHTML = `<i class="fas fa-divide"></i>${t.divisionFactor}`;
-    document.getElementById('modify-xml').innerHTML = `<i class="fas fa-edit"></i>${t.modifyXml}`;
-    document.getElementById('batch-process').innerHTML = `<i class="fas fa-tasks"></i>${t.batchProcess}`;
-    document.getElementById('github-repo').innerHTML = `<i class="fab fa-github"></i>${t.githubRepo}`;
-    document.getElementById('bug-report').innerHTML = `<i class="fas fa-bug"></i>${t.bugReport}`;
-    document.getElementById('spritesheet-and-xml-generator').innerHTML = `<i class="fas fa-table"></i>${t.spritesheetGenerator}`;
-    document.getElementById('clear-messages').innerHTML = `<i class="fas fa-trash-alt"></i>${t.clear}`;
-    document.getElementById('copy-messages').innerHTML = `<i class="fas fa-copy"></i>${t.copy}`;
-    document.getElementById('load-image').innerHTML = `<i class="fas fa-folder-open"></i>${t.loadImage}`;
-    document.getElementById('resize-image').innerHTML = `<i class="fas fa-expand-alt"></i>${t.resize}`;
-    document.querySelector('label[for="aliasing"]').innerHTML = `<i class="fas fa-magic"></i>${t.aliasing}`;
-    document.querySelector('label[for="resize-percentage"]').textContent = `${t.resizePercentage}`;
-    document.querySelector('.placeholder p').textContent = t.noImageLoaded;
-    document.querySelector('[data-tab="single"]').textContent = t.singleImage;
-    document.querySelector('[data-tab="multiple"]').textContent = t.multipleImages;
-    document.querySelector('#progress-modal h3').innerHTML = `<i class="fas fa-spinner fa-spin"></i>${t.processingFiles}`;
-    document.getElementById('cancel-process').innerHTML = `<i class="fas fa-times"></i>${t.cancel}`;
-    document.querySelector('#batch-modal h3').innerHTML = `<i class="fas fa-tasks"></i>${t.batchOptions}`;
-    document.querySelector('label[for="batch-input-files"]').innerHTML = `<i class="fas fa-file-upload"></i>${t.selectXmlFiles}`;
-    document.querySelector('label[for="batch-folder-name"]').innerHTML = `<i class="fas fa-folder"></i>${t.folderName}`;
-    document.getElementById('start-batch').innerHTML = `<i class="fas fa-play"></i>${t.startProcessing}`;
-    
-    document.getElementById('language-select').addEventListener('change', function()
-    {
-
-        updateLanguage(this.value);
-    });
-
-    document.getElementById('language-select').value = currentLanguage;
-    updateLanguage(currentLanguage);
-    
-    updateFileInputLabels();
-}
-
-function updateFileInputLabels() {
-    const t = translations[currentLanguage];
-    const singleFileLabel = document.querySelector('.file-input-label');
-    const batchFileLabel = document.querySelector('#batch-modal .file-input-label');
-    
-    if (inputFile.files.length > 0) {
-        singleFileLabel.textContent = inputFile.files[0].name;
-    } else {
-        singleFileLabel.textContent = t.noFileSelected;
-    }
-    
-    if (batchInputFiles.files.length > 0) {
-        batchFileLabel.textContent = `${batchInputFiles.files.length} ${t.filesSelected}`;
-    } else {
-        batchFileLabel.textContent = t.noFileSelected;
-    }
-}
 
     function setTheme(theme) {
         document.body.classList.toggle('dark-mode', theme === 'dark');
@@ -240,7 +108,6 @@ function updateFileInputLabels() {
     initTheme();
     updateFileInputLabel();
     updateBatchFileInputLabel();
-    updateLanguage(currentLanguage);
 
     function addMessage(message) {
         const timestamp = new Date().toLocaleTimeString();
@@ -256,47 +123,46 @@ function updateFileInputLabels() {
         window.open(url, '_blank');
     }
 
-function updateFileInputLabel() {
-    const label = document.querySelector('.file-input-label');
-    if (inputFile.files.length > 0) {
-        label.textContent = inputFile.files[0].name;
-    } else {
-        label.textContent = 'No file selected';
+    function updateFileInputLabel() {
+        const label = document.querySelector('.file-input-label');
+        if (inputFile.files.length > 0) {
+            label.textContent = inputFile.files[0].name;
+        } else {
+            label.textContent = 'No file selected';
+        }
     }
-}
 
-document.querySelector('.file-input-button').addEventListener('click', function() {
-    inputFile.click();
-});
+    document.querySelector('.file-input-button').addEventListener('click', function() {
+        inputFile.click();
+    });
 
-function updateBatchFileInputLabel() {
-    const label = document.querySelector('#batch-modal .file-input-label');
-    if (batchInputFiles.files.length > 0) {
-        label.textContent = `${batchInputFiles.files.length} files selected`;
-    } else {
-        label.textContent = 'No files selected';
+    function updateBatchFileInputLabel() {
+        const label = document.querySelector('#batch-modal .file-input-label');
+        if (batchInputFiles.files.length > 0) {
+            label.textContent = `${batchInputFiles.files.length} files selected`;
+        } else {
+            label.textContent = 'No files selected';
+        }
     }
-}
 
-document.querySelector('#batch-modal .file-input-button').addEventListener('click', function() {
-    batchInputFiles.click();
-});
+    document.querySelector('#batch-modal .file-input-button').addEventListener('click', function() {
+        batchInputFiles.click();
+    });
 
-function switchTab(tabName) {
-    singleImageTab.classList.toggle('active', tabName === 'single');
-    multipleImageTab.classList.toggle('active', tabName === 'multiple');
-    singleImageContainer.classList.toggle('active', tabName === 'single');
-    multipleImagesContainer.classList.toggle('active', tabName === 'multiple');
-    
-    const t = translations[currentLanguage];
-    if (tabName === 'single' && currentImage) {
-        imageInfo.textContent = currentImage.name || 'Image';
-    } else if (tabName === 'multiple') {
-        const count = loadedImages.length;
-        imagesCount.textContent = `${count} ${count !== 1 ? t.images : t.image}`;
-        imageInfo.textContent = count > 0 ? `${count} ${count !== 1 ? t.images : t.image}` : t.noImageLoaded;
+    function switchTab(tabName) {
+        singleImageTab.classList.toggle('active', tabName === 'single');
+        multipleImageTab.classList.toggle('active', tabName === 'multiple');
+        singleImageContainer.classList.toggle('active', tabName === 'single');
+        multipleImagesContainer.classList.toggle('active', tabName === 'multiple');
+        
+        if (tabName === 'single' && currentImage) {
+            imageInfo.textContent = currentImage.name || 'Image';
+        } else if (tabName === 'multiple') {
+            const count = loadedImages.length;
+            imagesCount.textContent = `${count} ${count !== 1 ? 'images' : 'image'}`;
+            imageInfo.textContent = count > 0 ? `${count} ${count !== 1 ? 'images' : 'image'}` : 'No image loaded';
+        }
     }
-}
 
     function modifyXml() {
         const file = inputFile.files[0];
