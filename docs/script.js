@@ -754,7 +754,7 @@ function switchTab(tabName) {
                 
                 switchTab('multiple');
             } else {
-                imageInfo.textContent = 't.noImageLoaded';
+                imageInfo.textContent = 'No images loaded';
                 if (placeholder) placeholder.style.display = 'flex';
             }
             
