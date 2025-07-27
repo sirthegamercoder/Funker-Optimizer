@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelProcessBtn = document.getElementById('cancel-process');
     const batchModal = document.getElementById('batch-modal');
     const batchInputFiles = document.getElementById('batch-input-files');
-    const batchFolderName = document.getElementById('batch-folder-name');
+    const batchOutputFiles = document.getElementById('batch-output-files');
     const startBatchBtn = document.getElementById('start-batch');
     const closeBatchModal = document.querySelector('#batch-modal .close');
 
@@ -378,7 +378,7 @@ function switchTab(tabName) {
 
     async function batchProcess() {
         const files = batchInputFiles.files;
-        const outputFolderName = batchFolderName.value.trim() || 'optimized_xml';
+        const outputFileName = batchOutputFiles.value.trim() || 'optimized_xml';
 
         if (files.length === 0) {
             showError('Please select at least one XML file.');
@@ -392,7 +392,7 @@ function switchTab(tabName) {
         progressText.textContent = '0%';
         
         const zip = new JSZip();
-        const folder = zip.folder(outputFolderName);
+        const folder = zip.folder(outputFileName);
         let processedCount = 0;
         const totalFiles = files.length;
         const divisionFactor = parseInt(divisionNumber.value) || 2;
@@ -461,14 +461,14 @@ function switchTab(tabName) {
             const url = URL.createObjectURL(zipContent);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${outputFolderName}.zip`;
+            a.download = `${outputFileName}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             
             addMessage(`Batch processing completed. ${processedCount}/${totalFiles} files processed.`);
-            addMessage(`ZIP archive saved as: ${outputFolderName}.zip`);
+            addMessage(`ZIP archive saved as: ${outputDirName}.zip`);
         } catch (error) {
             showError(`Error creating ZIP file: ${error.message}`);
         } finally {
