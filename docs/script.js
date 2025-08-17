@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const inputFile = document.getElementById('input-file');
     const outputFile = document.getElementById('output-file');
-    const divisionNumber = document.getElementById('division-number');
+    const divisionNumber = document.getElementById('division-number').value = 2;
     const batchProcessBtn = document.getElementById('batch-process');
     const modifyXmlBtn = document.getElementById('modify-xml');
     const githubRepoBtn = document.getElementById('github-repo');
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadImageBtn = document.getElementById('load-image');
     const resizeImageBtn = document.getElementById('resize-image');
     const aliasingCheckbox = document.getElementById('aliasing');
-    const resizePercentage = document.getElementById('resize-percentage');
+    const resizePercentage = document.getElementById('resize-percentage').value = 50;
     const imageInfo = document.getElementById('image-info');
     const imageContainer = document.getElementById('image-container');
     const multiImageGrid = document.getElementById('multi-image-grid');
