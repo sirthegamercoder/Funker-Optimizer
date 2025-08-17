@@ -1,8 +1,3 @@
-# ANNOUNCEMENT
-> [!WARNING]
-> This repository has been archived because I am very tired, so I decided to delete the site, but you can still download the tools as usual.
-
-
 # Funker' Optimizer 
 A tool that can optimize large spritesheet into small for Friday Night Funkin' (FNF). Is perfect if optimizing spritesheet using a PC, especially for you who are a optimizer using a PC.
 
