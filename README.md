@@ -57,7 +57,10 @@ After you have done the setup you should now need the following for this tool :
 > [!TIP]
 > When click `Resize Image` there is a two options again, resize a single image or resize a multiple images. You can select thay options again if you want resize a single image or multiple images
 
-13. Enter the percentage number
+13. Enter the percentage number (Without %)
+> [!CAUTION]
+> DO NOT ENTER A PERCENTAGE NUMBER OF MORE THAN 50 THIS HAS BEEN EXPLAINED IN `ReadMe.txt` on `art` folder
+
 14. Click on image file and save it
 > [!TIP]
 > If you are asked to replace it like massage `Do you want to replace it?` just click `Yes`
@@ -109,3 +112,6 @@ After you have done the setup you should now need the following for this tool :
 ### GameBanana
 
 <a href="https://gamebanana.com/tools/19963"><img src="https://images.gamebanana.com/img/embeddables/Tool_19963_large.jpg?1749456793"/></a>
+
+### Web Version
+To use this tool, you can click [here](https://sirthegamercoder.github.io/Funker-Optimizer/)!
