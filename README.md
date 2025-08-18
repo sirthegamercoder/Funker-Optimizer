@@ -59,7 +59,7 @@ After you have done the setup you should now need the following for this tool :
 
 13. Enter the percentage number (Without %)
 > [!CAUTION]
-> DO NOT ENTER A PERCENTAGE NUMBER OF MORE THAN 50 THIS HAS BEEN EXPLAINED IN `ReadMe.txt` on `art` folder
+> DO NOT ENTER A PERCENTAGE NUMBER OF MORE THAN 50
 
 14. Click on image file and save it
 > [!TIP]
