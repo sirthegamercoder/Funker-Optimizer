@@ -636,3 +636,8 @@ input:checked + .slider:before {
         margin: 20% auto;
     }
 }
+
+.file-input-wrapper.drag-over {
+    border: 2px dashed var(--primary-color);
+    background-color: rgba(74, 107, 255, 0.05);
+}

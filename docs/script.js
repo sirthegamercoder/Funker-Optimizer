@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const singleFileInputWrapper = document.querySelector('.file-input-wrapper');
+    const batchFileInputWrapper = document.querySelector('#batch-modal .file-input-wrapper');
     const inputFile = document.getElementById('input-file');
     const outputFile = document.getElementById('output-file');
     const divisionNumber = document.getElementById('division-number').value = 2;
@@ -40,6 +42,42 @@ document.addEventListener('DOMContentLoaded', function() {
     let loadedImages = [];
     let processing = false;
     let cancelRequested = false;
+
+    singleFileInputWrapper.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        singleFileInputWrapper.classList.add('drag-over');
+    });
+    singleFileInputWrapper.addEventListener('dragleave', () => {
+        singleFileInputWrapper.classList.remove('drag-over');
+    });
+    singleFileInputWrapper.addEventListener('drop', (e) => {
+        e.preventDefault();
+        singleFileInputWrapper.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            inputFile.files = files;
+            updateFileInputLabel();
+            addMessage(`Dropped file: ${files[0].name}`);
+        }
+    });
+
+    batchFileInputWrapper.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        batchFileInputWrapper.classList.add('drag-over');
+    });
+    batchFileInputWrapper.addEventListener('dragleave', () => {
+        batchFileInputWrapper.classList.remove('drag-over');
+    });
+    batchFileInputWrapper.addEventListener('drop', (e) => {
+        e.preventDefault();
+        batchFileInputWrapper.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            batchInputFiles.files = files;
+            updateBatchFileInputLabel();
+            addMessage(`Dropped ${files.length} files for batch processing.`);
+        }
+    });
 
     function initTheme() {
         const savedTheme = localStorage.getItem('theme') || 
