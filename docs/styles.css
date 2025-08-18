@@ -589,6 +589,7 @@ input:checked + .slider:before {
     background-color: var(--input-bg);
     border-radius: 10px;
     overflow: hidden;
+    width: 100%;
 }
 
 .progress-bar::after {

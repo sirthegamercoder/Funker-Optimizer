@@ -268,9 +268,10 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
         };
         reader.onerror = () => {
             showError('Error reading the XML file.');
+            reader.abort();
         };
-        reader.readAsText(file);
-    }
+    reader.readAsText(file);
+}
 
     async function batchProcess() {
         const files = batchInputFiles.files;
@@ -327,7 +328,7 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
                 
                 processedCount++;
                 const progress = Math.round((i + 1) / totalFiles * 100);
-                progressBar.parentElement.style.width = `${progress}%`;
+                progressBar.style.width = `${progress}%`;
                 progressText.textContent = `${progress}%`;
                 
                 addMessage(`Processed: ${file.name} (${i + 1}/${totalFiles})`);
@@ -350,7 +351,7 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
             
             const zipContent = await zip.generateAsync({ type: 'blob' }, metadata => {
                 const progress = Math.round(metadata.percent);
-                progressBar.parentElement.style.width = `${progress}%`;
+                progressBar.style.width = `${progress}%`;
                 progressText.textContent = `${progress}%`;
             });
             
@@ -531,6 +532,11 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
             return;
         }
 
+        if (percentage <= 0 || percentage > 1000) {
+        showError('Percentage must be between 1 and 1000.');
+        return;
+    }
+
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         
@@ -566,6 +572,11 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
             showError('No images loaded for resizing.');
             return;
         }
+
+        if (percentage <= 0 || percentage > 1000) {
+        showError('Percentage must be between 1 and 1000.');
+        return;
+    }
 
         processing = true;
         cancelRequested = false;
@@ -608,7 +619,7 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
                 
                 processedCount++;
                 const progress = Math.round((i + 1) / totalImages * 100);
-                progressBar.parentElement.style.width = `${progress}%`;
+                progressBar.style.width = `${progress}%`;
                 progressText.textContent = `${progress}%`;
                 
                 addMessage(`Resized: ${imgData.file.name} (${i + 1}/${totalImages})`);
@@ -631,7 +642,7 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
             
             const zipContent = await zip.generateAsync({ type: 'blob' }, metadata => {
                 const progress = Math.round(metadata.percent);
-                progressBar.parentElement.style.width = `${progress}%`;
+                progressBar.style.width = `${progress}%`;
                 progressText.textContent = `${progress}%`;
             });
             
