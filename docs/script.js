@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const batchFileInputWrapper = document.querySelector('#batch-modal .file-input-wrapper');
     const inputFile = document.getElementById('input-file');
     const outputFile = document.getElementById('output-file');
-    const divisionNumber = document.getElementById('division-number').value = 2;
+    const divisionNumber = document.getElementById('division-number');
     const batchProcessBtn = document.getElementById('batch-process');
     const modifyXmlBtn = document.getElementById('modify-xml');
     const githubRepoBtn = document.getElementById('github-repo');
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadImageBtn = document.getElementById('load-image');
     const resizeImageBtn = document.getElementById('resize-image');
     const aliasingCheckbox = document.getElementById('aliasing');
-    const resizePercentage = document.getElementById('resize-percentage').value = 50;
+    const resizePercentage = document.getElementById('resize-percentage');
     const imageInfo = document.getElementById('image-info');
     const imageContainer = document.getElementById('image-container');
     const multiImageGrid = document.getElementById('multi-image-grid');
@@ -119,21 +119,31 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     loadImageBtn.addEventListener('click', loadImage);
+
     resizeImageBtn.addEventListener('click', () => {
-        const percentage = parseInt(resizePercentage.value);
-        if (isNaN(percentage) || percentage <= 0) {
-            showError('Please enter a valid percentage.');
-            return;
-        }
+    resizePercentage.disabled = false;
+    const percentage = parseFloat(resizePercentage.value);
+    resizePercentage.disabled = true;
+
+        if (isNaN(percentage)) {
+        showError('Please enter a valid percentage.');
+        return;
+    }
+    
+    if (percentage <= 0 || percentage > 1000) {
+        showError('Percentage must be between 1 and 1000.');
+        return;
+    }
+    
         
         if (singleImageTab.classList.contains('active') && currentImage) {
             resizeSingleImage(percentage);
-        } else if (multipleImageTab.classList.contains('active') && loadedImages.length > 0) {
+    } else if (multipleImageTab.classList.contains('active') && loadedImages.length > 0) {
             resizeMultipleImages(percentage);
-        } else {
+    } else {
             showError('No images loaded to resize.');
-        }
-    });
+    }
+});
     
     singleImageTab.addEventListener('click', () => switchTab('single'));
     multipleImageTab.addEventListener('click', () => switchTab('multiple'));
