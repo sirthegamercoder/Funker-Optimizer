@@ -12,4 +12,3 @@ echo Installation packages are done
 echo The window will automatically closes by itself
 pause
 exit /b
-
