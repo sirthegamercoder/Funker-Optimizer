@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const singleFileInputWrapper = document.querySelector('.file-input-wrapper');
+    const imagePreviewContainer = document.querySelector('.image-preview-container');
     const batchFileInputWrapper = document.querySelector('#batch-modal .file-input-wrapper');
+    const toastContainer = document.getElementById('toast-container');
     const inputFile = document.getElementById('input-file');
     const outputFile = document.getElementById('output-file');
     const divisionNumber = document.getElementById('division-number');
@@ -76,6 +78,50 @@ document.addEventListener('DOMContentLoaded', function() {
             batchInputFiles.files = files;
             updateBatchFileInputLabel();
             addMessage(`Dropped ${files.length} files for batch processing.`);
+        }
+    });
+
+    imagePreviewContainer.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation(); 
+        imagePreviewContainer.classList.add('drag-over');
+    });
+
+    imagePreviewContainer.addEventListener('dragleave', () => {
+        imagePreviewContainer.classList.remove('drag-over');
+    });
+
+    imagePreviewContainer.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        imagePreviewContainer.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+
+        if (files.length === 0) return;
+
+        if (files.length === 1 && files[0].type.startsWith('image/')) {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(files[0]);
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.files = dataTransfer.files;
+            const event = new Event('change');
+            Object.defineProperty(event, 'target', { value: input, writable: false });
+            loadSingleImageFromEvent(event);
+            addMessage(`Dropped single image: ${files[0].name}`);
+        } else if (files.length > 0 && Array.from(files).every(file => file.type.startsWith('image/'))) {
+            const dataTransfer = new DataTransfer();
+            Array.from(files).forEach(file => dataTransfer.items.add(file));
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+            input.files = dataTransfer.files;
+            const event = new Event('change');
+            Object.defineProperty(event, 'target', { value: input, writable: false });
+            await loadMultipleImagesFromEvent(event);
+            addMessage(`Dropped ${files.length} images for processing.`);
+        } else {
+            showError('Dropped files are not valid image files.');
         }
     });
 
@@ -157,19 +203,45 @@ document.addEventListener('DOMContentLoaded', function() {
     updateFileInputLabel();
     updateBatchFileInputLabel();
 
-    function addMessage(message) {
+    function addMessage(message, type = 'info') {
         const timestamp = new Date().toLocaleTimeString();
         messageText.value += `[${timestamp}] ${message}\n`;
         messageText.scrollTop = messageText.scrollHeight;
+
+        showToast(message, type);
     }
 
     function showError(message) {
-        addMessage(`ERROR: ${message}`);
+        addMessage(`ERROR: ${message}`, 'error');
     }
 
     function openUrl(url) {
         window.open(url, '_blank');
     }
+
+    function showToast(message, type = 'info', duration = 3000) {
+        const toast = document.createElement('div');
+        toast.classList.add('toast', type);
+
+        let iconClass = '';
+        if (type === 'success') {
+            iconClass = 'fas fa-check-circle';
+        } else if (type === 'error') {
+            iconClass = 'fas fa-times-circle';
+        } else {
+            iconClass = 'fas fa-info-circle';
+        }
+
+        toast.innerHTML = `<i class="${iconClass}"></i><span>${message}</span>`;
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'fadeOut 0.5s forwards'; // Trigger fade out animation
+            toast.addEventListener('animationend', () => {
+                toast.remove();
+        }, { once: true });
+    }, duration);
+}
 
 function updateFileInputLabel() {
     const label = document.querySelector('.file-input-label');
@@ -204,6 +276,39 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
         multipleImagesContainer.classList.toggle('active', tabName === 'multiple');
     }
 
+    function validateXmlStructure(xmlDoc) {
+        const errors = [];
+
+    
+    const rootElement = xmlDoc.documentElement;
+    if (!rootElement || rootElement.nodeName !== 'TextureAtlas') {
+        errors.push("Root element must be 'TextureAtlas'.");
+    }
+
+    const subTextures = xmlDoc.getElementsByTagName('SubTexture');
+    if (subTextures.length === 0) {
+        errors.push("No 'SubTexture' elements found.");
+    } else {
+        for (let i = 0; i < subTextures.length; i++) {
+            const subTexture = subTextures[i];
+            const name = subTexture.getAttribute('name');
+            const x = subTexture.getAttribute('x');
+            const y = subTexture.getAttribute('y');
+            const width = subTexture.getAttribute('width');
+            const height = subTexture.getAttribute('height');
+
+            if (!name) errors.push(`SubTexture at index ${i} is missing 'name' attribute.`);
+            if (!x || isNaN(parseInt(x))) errors.push(`SubTexture '${name || 'unknown'}' has invalid or missing 'x' attribute.`);
+            if (!y || isNaN(parseInt(y))) errors.push(`SubTexture '${name || 'unknown'}' has invalid or missing 'y' attribute.`);
+            if (!width || isNaN(parseInt(width))) errors.push(`SubTexture '${name || 'unknown'}' has invalid or missing 'width' attribute.`);
+            if (!height || isNaN(parseInt(height))) errors.push(`SubTexture '${name || 'unknown'}' has invalid or missing 'height' attribute.`);
+
+        }
+    }
+
+    return errors;
+}
+
     function modifyXml() {
         const file = inputFile.files[0];
         const outputFileName = outputFile.value.trim() || 'output.xml';
@@ -226,9 +331,14 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
             try {
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(e.target.result, 'text/xml');
-                
+
                 if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
-                    throw new Error("Invalid XML file");
+                    throw new Error("Invalid XML file (parsing error).");
+                }
+
+                const validationErrors = validateXmlStructure(xmlDoc);
+                if (validationErrors.length > 0) {
+                    throw new Error("XML structure validation failed:\n" + validationErrors.join('\n'));
                 }
 
                 const subTextures = xmlDoc.getElementsByTagName('SubTexture');
@@ -252,7 +362,7 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
                 }
 
                 if (cancelRequested) {
-                    addMessage('Processing cancelled by user.');
+                    addMessage('Processing cancelled by user.', 'info');
                     cancelRequested = false;
                     return;
                 }
@@ -270,8 +380,8 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
 
-                addMessage(`Successfully processed ${processed}/${total} elements.`);
-                addMessage(`Modified file saved as: ${outputFileName}`);
+                addMessage(`Successfully processed ${processed}/${total} elements.`, 'success');
+                addMessage(`Modified file saved as: ${outputFileName}`, 'success');
             } catch (error) {
                 showError(`Error processing XML: ${error.message}`);
             }
@@ -316,9 +426,14 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
                 const content = await readFileAsText(file);
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(content, 'text/xml');
-                
+
                 if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
-                    throw new Error("Invalid XML file");
+                    throw new Error("Invalid XML file (parsing error).");
+                }
+
+                const validationErrors = validateXmlStructure(xmlDoc);
+                if (validationErrors.length > 0) {
+                    throw new Error("XML structure validation failed:\n" + validationErrors.join('\n'));
                 }
 
                 const subTextures = xmlDoc.getElementsByTagName('SubTexture');
@@ -348,7 +463,7 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
         }
 
         if (cancelRequested) {
-            addMessage('Batch processing cancelled by user.');
+            addMessage('Batch processing cancelled by user.', 'info');
             progressModal.style.display = 'none';
             processing = false;
             cancelRequested = false;
@@ -374,8 +489,8 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             
-            addMessage(`Batch processing completed. ${processedCount}/${totalFiles} files processed.`);
-            addMessage(`ZIP archive saved as: ${outputFolderName}.zip`);
+            addMessage(`Batch processing completed. ${processedCount}/${totalFiles} files processed.`, 'success');
+            addMessage(`ZIP archive saved as: ${outputFolderName}.zip`, 'success');
         } catch (error) {
             showError(`Error creating ZIP file: ${error.message}`);
         } finally {
@@ -396,123 +511,115 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
 
     function loadImage() {
         const isSingle = confirm('Load a single image (OK) or multiple images (Cancel)?');
-        
+
         if (isSingle) {
-            loadSingleImage();
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = loadSingleImageFromEvent;
+            input.click();
         } else {
-            loadMultipleImages();
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+            input.accept = 'image/*';
+            input.onchange = loadMultipleImagesFromEvent;
+            input.click();
         }
     }
 
-    function loadSingleImage() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        
-        input.onchange = e => {
-            const file = e.target.files[0];
-            if (!file) return;
+    function loadSingleImageFromEvent(e) {
+        const file = e.target.files[0];
+        if (!file) return;
 
-            const reader = new FileReader();
-            reader.onload = event => {
-                currentImage = new Image();
-                currentImage.src = event.target.result;
-                currentImage.onload = () => {
-                    imageContainer.innerHTML = '';
-                    const imgElement = document.createElement('img');
-                    imgElement.src = event.target.result;
-                    imageContainer.appendChild(imgElement);
-                    
-                    imageDimensions.textContent = `${currentImage.width}×${currentImage.height}px`;
-                    imageSize.textContent = `${formatFileSize(file.size)}`;
-                    
-                    imageInfo.textContent = file.name;
-                    resizeImageBtn.disabled = false;
-                    
-                    addMessage(`Loaded image: ${file.name} (${currentImage.width}×${currentImage.height}, ${formatFileSize(file.size)})`);
-                    
-                    switchTab('single');
-                };
-                currentImage.onerror = () => {
-                    showError(`Failed to load image: ${file.name}`);
-                };
+        const reader = new FileReader();
+        reader.onload = event => {
+            currentImage = new Image();
+            currentImage.src = event.target.result;
+            currentImage.onload = () => {
+                imageContainer.innerHTML = '';
+                const imgElement = document.createElement('img');
+                imgElement.src = event.target.result;
+                imageContainer.appendChild(imgElement);
+
+                imageDimensions.textContent = `${currentImage.width}×${currentImage.height}px`;
+                imageSize.textContent = `${formatFileSize(file.size)}`;
+
+                imageInfo.textContent = file.name;
+                resizeImageBtn.disabled = false;
+
+                addMessage(`Loaded image: ${file.name} (...)`, 'success');
+
+                switchTab('single');
             };
-            reader.onerror = () => {
-                showError(`Failed to read file: ${file.name}`);
+            currentImage.onerror = () => {
+                showError(`Failed to load image: ${file.name}`);
             };
-            reader.readAsDataURL(file);
         };
-        
-        input.click();
+        reader.onerror = () => {
+            showError(`Failed to read file: ${file.name}`);
+        };
+        reader.readAsDataURL(file);
     }
 
-    function loadMultipleImages() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.multiple = true;
-        input.accept = 'image/*';
-        
-        input.onchange = async e => {
-            const files = Array.from(e.target.files);
-            if (files.length === 0) return;
+    async function loadMultipleImagesFromEvent(e) {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
 
-            loadedImages = [];
-            let loadedCount = 0;
-            let failedFiles = [];
-            
-            multiImageGrid.innerHTML = '';
-            
-            const placeholder = multipleImagesContainer.querySelector('.placeholder');
-            if (placeholder) placeholder.style.display = 'none';
+        loadedImages = [];
+        let loadedCount = 0;
+        let failedFiles = [];
 
-            for (const file of files) {
-                try {
-                    const imgData = await loadImageFile(file);
-                    loadedImages.push(imgData);
-                    loadedCount++;
-                    
-                    const imgItem = document.createElement('div');
-                    imgItem.className = 'multi-image-item';
-                    
-                    const imgElement = document.createElement('img');
-                    imgElement.src = imgData.url;
-                    imgElement.alt = file.name;
-                    
-                    const fileName = document.createElement('div');
-                    fileName.className = 'file-name';
-                    fileName.textContent = file.name;
-                    
-                    imgItem.appendChild(imgElement);
-                    imgItem.appendChild(fileName);
-                    multiImageGrid.appendChild(imgItem);
-                    
-                } catch (error) {
-                    failedFiles.push(`${file.name}: ${error.message}`);
-                }
-            }
+        multiImageGrid.innerHTML = '';
 
-            imagesCount.textContent = `${loadedCount} image${loadedCount !== 1 ? 's' : ''}`;
-            resizeImageBtn.disabled = loadedCount === 0;
-            
-            if (loadedCount > 0) {
-                imageInfo.textContent = `${loadedCount} image${loadedCount !== 1 ? 's' : ''} loaded`;
-                addMessage(`Successfully loaded ${loadedCount}/${files.length} images.`);
-                
-                switchTab('multiple');
-            } else {
-                imageInfo.textContent = 'No images loaded';
-                if (placeholder) placeholder.style.display = 'flex';
+        const placeholder = multipleImagesContainer.querySelector('.placeholder');
+        if (placeholder) placeholder.style.display = 'none';
+
+        for (const file of files) {
+            try {
+                const imgData = await loadImageFile(file);
+                loadedImages.push(imgData);
+                loadedCount++;
+
+                const imgItem = document.createElement('div');
+                imgItem.className = 'multi-image-item';
+
+                const imgElement = document.createElement('img');
+                imgElement.src = imgData.url;
+                imgElement.alt = file.name;
+
+                const fileName = document.createElement('div');
+                fileName.className = 'file-name';
+                fileName.textContent = file.name;
+
+                imgItem.appendChild(imgElement);
+                imgItem.appendChild(fileName);
+                multiImageGrid.appendChild(imgItem);
+
+            } catch (error) {
+                failedFiles.push(`${file.name}: ${error.message}`);
             }
-            
-            if (failedFiles.length > 0) {
-                const errorMsg = `Failed to load ${failedFiles.length} image${failedFiles.length !== 1 ? 's' : ''}:\n${failedFiles.join('\n')}`;
-                showError(errorMsg);
-            }
-        };
-        
-        input.click();
+        }
+
+        imagesCount.textContent = `${loadedCount} image${loadedCount !== 1 ? 's' : ''}`;
+        resizeImageBtn.disabled = loadedCount === 0;
+
+        if (loadedCount > 0) {
+            imageInfo.textContent = `${loadedCount} image${loadedCount !== 1 ? 's' : ''} loaded`;
+            addMessage(`Successfully loaded ${loadedCount}/${files.length} images.`);
+
+            switchTab('multiple');
+        } else {
+            imageInfo.textContent = 'No images loaded';
+            if (placeholder) placeholder.style.display = 'flex';
+        }
+
+        if (failedFiles.length > 0) {
+            const errorMsg = `Failed to load ${failedFiles.length} image${failedFiles.length !== 1 ? 's' : ''}:\n${failedFiles.join('\n')}`;
+            showError(errorMsg);
+        }
     }
-
+    
     function loadImageFile(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -573,7 +680,7 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             
-            addMessage(`Resized image saved successfully.`);
+            addMessage(`Resized image saved successfully.`, 'success');
         }, 'image/png', 0.92);
     }
 
@@ -639,7 +746,7 @@ document.querySelector('#batch-modal .file-input-button').addEventListener('clic
         }
 
         if (cancelRequested) {
-            addMessage('Image resizing cancelled by user.');
+            addMessage('Image resizing cancelled by user.', 'info');
             progressModal.style.display = 'none';
             processing = false;
             cancelRequested = false;
