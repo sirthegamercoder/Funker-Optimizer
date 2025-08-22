@@ -6,9 +6,10 @@ echo ==========================
 echo.
 echo This script will install packages from the requirements.txt
 echo.
-pip install -r requirements.txt --no-input
+pip install -r requirements.txt -y
 echo.
 echo Installation packages are done
 echo The window will automatically closes by itself
 pause
 exit /b
+
