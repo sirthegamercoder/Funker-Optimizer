@@ -47,6 +47,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.6;
+    touch-action: manipulation;
 }
 
 .container {
@@ -419,6 +420,7 @@ input[type="file"] {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+    transition: opacity 0.3s;
 }
 
 .placeholder {
@@ -610,6 +612,161 @@ input:checked + .slider:before {
     margin-top: 5px;
 }
 
+.progress-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--placeholder-color);
+    margin-top: 5px;
+}
+
+.progress-time {
+    font-style: italic;
+}
+
+.touch-actions {
+    display: none;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.touch-action-btn {
+    padding: 8px 12px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.touch-action-btn:hover {
+    background-color: var(--secondary-hover);
+}
+
+.notification-center {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 350px;
+}
+
+.notification {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideInUp 0.5s forwards, fadeOut 0.5s forwards 4.5s;
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--info-color);
+}
+
+.notification.success {
+    border-left-color: var(--success-color);
+}
+
+.notification.error {
+    border-left-color: var(--danger-color);
+}
+
+.notification.warning {
+    border-left-color: var(--warning-color);
+}
+
+.notification.info {
+    border-left-color: var(--info-color);
+}
+
+.notification i {
+    font-size: 20px;
+}
+
+.notification.success i { color: var(--success-color); }
+.notification.error i { color: var(--danger-color); }
+.notification.warning i { color: var(--warning-color); }
+.notification.info i { color: var(--info-color); }
+
+.notification.progress {
+    animation: slideInUp 0.5s forwards;
+    border-left-color: var(--primary-color);
+}
+
+.notification.progress i {
+    color: var(--primary-color);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.image-loading {
+    position: relative;
+}
+
+.image-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--primary-color);
+}
+
+.image-loading::before {
+    content: '\f1ce';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: var(--primary-color);
+    z-index: 10;
+    animation: spin 1s linear infinite;
+}
+
 @media (max-width: 992px) {
     main {
         flex-direction: column;
@@ -623,9 +780,13 @@ input:checked + .slider:before {
     .card {
         width: 100%;
     }
+
+    .touch-actions {
+        display: flex;
+    }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
     .container {
         padding: 15px;
     }
@@ -698,18 +859,16 @@ input:checked + .slider:before {
         grid-template-columns: 1fr;
     }
 
-    .toast {
-        min-width: unset;
-        max-width: calc(100% - 40px);
-        left: 20px;
-        right: 20px;
-    }
-
-    #toast-container {
-        top: 10px;
+    .notification-center {
+        bottom: 10px;
         right: 10px;
         left: 10px;
-        align-items: center;
+        max-width: none;
+    }
+
+    .notification {
+        width: 100%;
+        max-width: none;
     }
     
     .settings-group {
@@ -724,6 +883,44 @@ input:checked + .slider:before {
     .modal-content {
         width: 95%;
         margin: 20% auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .file-input-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .theme-toggle {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .btn-primary, .btn-secondary, .btn-link, .btn-small {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    select {
+        font-size: 16px; /* Prevents zoom on iOS */
     }
 }
 
@@ -792,16 +989,5 @@ input:checked + .slider:before {
     to {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(-20px);
     }
 }

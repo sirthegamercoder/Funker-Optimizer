@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -136,6 +135,11 @@
                                     <span id="image-dimensions">-</span>
                                     <span id="image-size">-</span>
                                 </div>
+                                <div class="touch-actions">
+                                    <button class="touch-action-btn" id="zoom-in-btn"><i class="fas fa-search-plus"></i> Zoom In</button>
+                                    <button class="touch-action-btn" id="zoom-out-btn"><i class="fas fa-search-minus"></i> Zoom Out</button>
+                                    <button class="touch-action-btn" id="reset-zoom-btn"><i class="fas fa-sync"></i> Reset</button>
+                                </div>
                             </div>
                             
                             <div id="multiple-images-container" class="tab-content">
@@ -162,6 +166,10 @@
                 <div class="progress-bar" id="progress-bar"></div>
                 <span id="progress-text">0%</span>
             </div>
+            <div class="progress-details">
+                <span id="processed-items">0/0 items</span>
+                <span id="progress-time" class="progress-time">Estimating time...</span>
+            </div>
             <div id="current-file">Preparing files...</div>
             <button id="cancel-process" class="btn-small">Cancel</button>
         </div>
@@ -181,6 +189,7 @@
                     </button>
                     <span class="file-input-label">No files selected</span>
                 </div>
+            </div>
             
             <div class="input-group">
                 <label for="batch-folder-name"><i class="fas fa-folder"></i>Folder Name:</label>
@@ -194,6 +203,10 @@
             </div>
         </div>
     </div>
+
+    <div id="notification-center" class="notification-center"></div>
     <div id="toast-container"></div>
+
+    <script src="script.js"></script>
 </body>
 </html>
