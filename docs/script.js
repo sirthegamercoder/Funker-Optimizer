@@ -173,19 +173,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (files.length === 0) return;
 
-        if (files.length === 1 && files[0].type.startsWith('image/')) {
+        const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+        
+        if (imageFiles.length === 0) {
+            showError('Dropped files are not valid image files.');
+            return;
+        }
+
+        if (imageFiles.length === 1) {
             const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(files[0]);
+            dataTransfer.items.add(imageFiles[0]);
             const input = document.createElement('input');
             input.type = 'file';
             input.files = dataTransfer.files;
             const event = new Event('change');
             Object.defineProperty(event, 'target', { value: input, writable: false });
             loadSingleImageFromEvent(event);
-            addMessage(`Dropped single image: ${files[0].name}`);
-        } else if (files.length > 0 && Array.from(files).every(file => file.type.startsWith('image/'))) {
+            addMessage(`Dropped single image: ${imageFiles[0].name}`);
+        } else {
             const dataTransfer = new DataTransfer();
-            Array.from(files).forEach(file => dataTransfer.items.add(file));
+            imageFiles.forEach(file => dataTransfer.items.add(file));
             const input = document.createElement('input');
             input.type = 'file';
             input.multiple = true;
@@ -193,9 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const event = new Event('change');
             Object.defineProperty(event, 'target', { value: input, writable: false });
             await loadMultipleImagesFromEvent(event);
-            addMessage(`Dropped ${files.length} images for processing.`);
-        } else {
-            showError('Dropped files are not valid image files.');
+            addMessage(`Dropped ${imageFiles.length} images for processing.`);
         }
     }
 
