@@ -1,23 +1,3 @@
-(function initThemeImmediately() {
-    const savedTheme = localStorage.getItem('theme');
-    let theme;
-    
-    if (savedTheme) {
-        theme = savedTheme;
-    } else {
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        theme = isDark ? 'dark' : 'light';
-    }
-
-    document.documentElement.setAttribute('data-theme', theme);
-    document.body.classList.toggle('dark-mode', theme === 'dark');
-
-    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (metaThemeColor) {
-        metaThemeColor.content = theme === 'dark' ? '#2d3748' : '#4a6bff';
-    }
-})();
-
 import JSZip from 'jszip';
 import UIManager from './uiManager.js';
 import XMLProcessor from './xmlProcessor.js';
@@ -119,41 +99,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function initTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        let theme;
-        
-        if (savedTheme) {
-            theme = savedTheme;
-        } else {
-            theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        }
-
-        setTheme(theme);
-
-        if (!savedTheme) {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                if (!localStorage.getItem('theme')) {
-                    setTheme(e.matches ? 'dark' : 'light');
-                }
-            });
-        }
+        const savedTheme = localStorage.getItem('theme') || 
+                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        setTheme(savedTheme);
     }
 
     function setTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        document.body.classList.toggle('dark-mode', theme === 'dark');
-        if (themeSwitch) {
-            themeSwitch.checked = theme === 'dark';
-        }
-        localStorage.setItem('theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.classList.toggle('dark-mode', theme === 'dark');
+    themeSwitch.checked = theme === 'dark';
+    localStorage.setItem('theme', theme);
 
-        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-        if (metaThemeColor) {
-            metaThemeColor.content = theme === 'dark' ? '#2d3748' : '#4a6bff';
-        }
-
-        window.dispatchEvent(new CustomEvent('themeChanged', { detail: theme }));
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+        metaThemeColor.content = theme === 'dark' ? '#2d3748' : '#ffffff';
     }
+}
 
     function toggleTheme() {
         setTheme(themeSwitch.checked ? 'dark' : 'light');
@@ -613,8 +574,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (isTouchDevice) {
             document.body.classList.add('touch-device');
-
-            document.querySelector('.touch-actions').style.display = 'flex';
 
             document.querySelectorAll('.file-input-wrapper, .image-preview-container').forEach(element => {
                 element.addEventListener('touchstart', function() {
