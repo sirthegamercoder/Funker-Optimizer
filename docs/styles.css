@@ -882,11 +882,11 @@ input:checked + .slider:before {
     .settings-group {
         flex-direction: column;
         align-items: flex-start;
-    } */
+    }
 
     .input-group.small {
         width: 100%;
-    } */
+    }
     
     .modal-content {
         width: 95%;
