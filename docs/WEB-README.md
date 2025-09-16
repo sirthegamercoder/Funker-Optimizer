@@ -25,3 +25,5 @@
 
 And that's it!
 : )
+
+*Credit to [Hl33](https://gamebanana.com/members/3434197) for Tradling font*
