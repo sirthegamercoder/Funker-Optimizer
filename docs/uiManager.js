@@ -146,10 +146,12 @@ export class UIManager {
     showProgressModal() {
         this.progressModal.style.display = 'block';
         this.updateProgress(0, 0, 0, 'Preparing files...');
+        document.body.style.overflow = 'hidden';
     }
 
     hideProgressModal() {
         this.progressModal.style.display = 'none';
+        document.body.style.overflow = '';
     }
 
     updateImageInfo(file, isMultiple = false, count = 0, imageData = null) {

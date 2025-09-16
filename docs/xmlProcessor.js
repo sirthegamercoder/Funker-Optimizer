@@ -1,3 +1,4 @@
+import JSZip from 'jszip';
 import { validateXmlStructure, readFileAsText } from './utils.js';
 
 export class XMLProcessor {
