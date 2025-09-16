@@ -58,6 +58,19 @@ body {
     touch-action: manipulation;
 }
 
+body:not([data-theme]) {
+    visibility: hidden;
+}
+
+body[data-theme] {
+    visibility: visible;
+    transition: visibility 0.3s ease;
+}
+
+body, .container, .card, input, button, textarea {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;

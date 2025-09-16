@@ -1,3 +1,23 @@
+(function initThemeImmediately() {
+    const savedTheme = localStorage.getItem('theme');
+    let theme;
+    
+    if (savedTheme) {
+        theme = savedTheme;
+    } else {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        theme = isDark ? 'dark' : 'light';
+    }
+
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.classList.toggle('dark-mode', theme === 'dark');
+
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+        metaThemeColor.content = theme === 'dark' ? '#2d3748' : '#4a6bff';
+    }
+})();
+
 import JSZip from 'jszip';
 import UIManager from './uiManager.js';
 import XMLProcessor from './xmlProcessor.js';
@@ -99,26 +119,40 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function initTheme() {
-        const savedTheme = localStorage.getItem('theme') || 
-                        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        setTheme(savedTheme);
+        const savedTheme = localStorage.getItem('theme');
+        let theme;
+        
+        if (savedTheme) {
+            theme = savedTheme;
+        } else {
+            theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
 
-        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-        if (metaThemeColor) {
-            metaThemeColor.content = savedTheme === 'dark' ? '#2d3748' : '#4a6bff';
+        setTheme(theme);
+
+        if (!savedTheme) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
         }
     }
 
     function setTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         document.body.classList.toggle('dark-mode', theme === 'dark');
-        themeSwitch.checked = theme === 'dark';
+        if (themeSwitch) {
+            themeSwitch.checked = theme === 'dark';
+        }
         localStorage.setItem('theme', theme);
 
         const metaThemeColor = document.querySelector('meta[name="theme-color"]');
         if (metaThemeColor) {
             metaThemeColor.content = theme === 'dark' ? '#2d3748' : '#4a6bff';
         }
+
+        window.dispatchEvent(new CustomEvent('themeChanged', { detail: theme }));
     }
 
     function toggleTheme() {
