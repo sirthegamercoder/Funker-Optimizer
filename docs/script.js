@@ -72,21 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
         checkTouchDevice();
     }
 
-    function loadJSZip() {
-            return new Promise((resolve, reject) => {
-                if (typeof JSZip !== 'undefined') {
-                    resolve(JSZip);
-                    return;
-                }
-                
-                const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-                script.onload = () => resolve(JSZip);
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-        }
-
     function setupEventListeners() {
         singleFileInputWrapper.addEventListener('dragover', handleDragOver);
         singleFileInputWrapper.addEventListener('dragleave', handleDragLeave);
@@ -168,6 +153,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         window.dispatchEvent(new CustomEvent('themeChanged', { detail: theme }));
+    }
+
+    function toggleTheme() {
+        setTheme(themeSwitch.checked ? 'dark' : 'light');
     }
 
     function handleDragOver(e) {

@@ -59,15 +59,13 @@ body {
 }
 
 body:not([data-theme]) {
-        opacity: 0;
-        visibility: hidden;
-    }
+    visibility: hidden;
+}
 
 body[data-theme] {
-        opacity: 1;
-        visibility: visible;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
+    visibility: visible;
+    transition: visibility 0.3s ease;
+}
 
 body, .container, .card, input, button, textarea {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -190,38 +188,36 @@ input[type="file"] {
 }
 
 .file-input-wrapper {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
-        
-.file-input-wrapper input[type=file] {
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-}
-        
+
 .file-input-button {
-    padding: 8px 12px;
-    background: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
     cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
-        
+
 .file-input-button:hover {
     background-color: var(--primary-hover);
 }
 
 .file-input-label {
-        margin-left: 10px;
-        color: #666;
-    }
+    font-size: 14px;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
 
 input[type="file"] {
     position: absolute;
