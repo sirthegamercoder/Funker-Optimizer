@@ -1,3 +1,4 @@
+import JSZip from 'jszip';
 import UIManager from './uiManager.js';
 import XMLProcessor from './xmlProcessor.js';
 import ImageProcessor from './imageProcessor.js';
@@ -104,10 +105,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setTheme(theme) {
-        document.body.classList.toggle('dark-mode', theme === 'dark');
-        themeSwitch.checked = theme === 'dark';
-        localStorage.setItem('theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.classList.toggle('dark-mode', theme === 'dark');
+    themeSwitch.checked = theme === 'dark';
+    localStorage.setItem('theme', theme);
+
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+        metaThemeColor.content = theme === 'dark' ? '#2d3748' : '#ffffff';
     }
+}
 
     function toggleTheme() {
         setTheme(themeSwitch.checked ? 'dark' : 'light');
@@ -215,6 +222,20 @@ document.addEventListener('DOMContentLoaded', function() {
         
         singleImageContainer.classList.toggle('active', tabName === 'single');
         multipleImagesContainer.classList.toggle('active', tabName === 'multiple');
+    }
+
+    function downloadBlob(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 100);
     }
 
     async function modifyXml() {
@@ -344,25 +365,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function startProgressTracking(totalItems) {
-        let processed = 0;
         progressStartTime = Date.now();
         
         progressInterval = setInterval(() => {
-            if (processed >= totalItems || cancelRequested) {
+            if (cancelRequested) {
                 stopProgressTracking();
                 return;
             }
+
+            const progressText = document.getElementById('processed-items').textContent;
+            const match = progressText.match(/(\d+)\/(\d+)/);
             
-            const elapsedTime = Date.now() - progressStartTime;
-            const itemsPerSecond = processed / (elapsedTime / 1000);
-            
-            if (itemsPerSecond > 0) {
-                const remainingItems = totalItems - processed;
-                const estimatedSeconds = remainingItems / itemsPerSecond;
-                document.getElementById('progress-time').textContent = `ETA: ${formatTime(estimatedSeconds)}`;
+            if (match) {
+                const processed = parseInt(match[1]);
+                const total = parseInt(match[2]);
+                
+                if (processed >= total) {
+                    stopProgressTracking();
+                    return;
+                }
+                
+                const elapsedTime = Date.now() - progressStartTime;
+                const itemsPerSecond = processed / (elapsedTime / 1000);
+                
+                if (itemsPerSecond > 0) {
+                    const remainingItems = total - processed;
+                    const estimatedSeconds = remainingItems / itemsPerSecond;
+                    document.getElementById('progress-time').textContent = `ETA: ${formatTime(estimatedSeconds)}`;
+                }
             }
-            
-            processed++;
         }, 1000);
     }
 
@@ -537,10 +568,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function checkTouchDevice() {
-        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const isTouchDevice = 'ontouchstart' in window || 
+                            navigator.maxTouchPoints > 0 || 
+                            navigator.msMaxTouchPoints > 0;
         
         if (isTouchDevice) {
             document.body.classList.add('touch-device');
+
+            document.querySelectorAll('.file-input-wrapper, .image-preview-container').forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.classList.add('touch-active');
+                });
+                
+                element.addEventListener('touchend', function() {
+                    this.classList.remove('touch-active');
+                });
+            });
         }
     }
 

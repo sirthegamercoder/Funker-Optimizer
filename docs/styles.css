@@ -628,6 +628,11 @@ input:checked + .slider:before {
     margin-top: 5px;
 }
 
+#progress-modal {
+    z-index: 10000;
+    position: fixed;
+}
+
 .progress-time {
     font-style: italic;
 }
@@ -679,6 +684,10 @@ input:checked + .slider:before {
     animation: slideInUp 0.5s forwards, fadeOut 0.5s forwards 4.5s;
     border: 1px solid var(--border-color);
     border-left: 5px solid var(--info-color);
+}
+
+.notification, .toast {
+    z-index: 9999;
 }
 
 .notification.success {
