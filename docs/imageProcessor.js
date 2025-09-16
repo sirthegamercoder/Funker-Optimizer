@@ -147,23 +147,10 @@ export class ImageProcessor {
                 
                 ctx.drawImage(imgData.img, 0, 0, newWidth, newHeight);
                 
-                const blob = await new Promise((resolve, reject) => {
-                    if (onProgress && onProgress.cancelled && onProgress.cancelled()) {
-                        reject(new Error('Processing cancelled by user.'));
-                        return;
-                    }
-                    
+                const blob = await new Promise(resolve => {
                     canvas.toBlob(resolve, 'image/png', 0.92);
-                }).catch(error => {
-                    if (error.message === 'Processing cancelled by user.') {
-                        throw error;
-                    }
-                    console.error(`Failed to create blob for ${imgData.file.name}:`, error);
-                    return null;
                 });
-
-                if (!blob) continue;
-
+                
                 zip.file(`resized_${imgData.file.name}`, blob);
                 
                 processedCount++;

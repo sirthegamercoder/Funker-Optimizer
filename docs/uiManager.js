@@ -146,21 +146,19 @@ export class UIManager {
     showProgressModal() {
         this.progressModal.style.display = 'block';
         this.updateProgress(0, 0, 0, 'Preparing files...');
-        document.body.style.overflow = 'hidden';
     }
 
     hideProgressModal() {
         this.progressModal.style.display = 'none';
-        document.body.style.overflow = '';
     }
 
-    updateImageInfo(file, isMultiple = false, count = 0, imageData = null) {
+    updateImageInfo(file, isMultiple = false, count = 0) {
         if (isMultiple) {
             this.imageInfo.textContent = `${count} image${count !== 1 ? 's' : ''} loaded`;
             this.imagesCount.textContent = `${count} image${count !== 1 ? 's' : ''}`;
-        } else if (file && imageData) {
+        } else if (file) {
             this.imageInfo.textContent = file.name;
-            this.imageDimensions.textContent = `${imageData.width}×${imageData.height}px`;
+            this.imageDimensions.textContent = `${currentImage.width}×${currentImage.height}px`;
             this.imageSize.textContent = `${formatFileSize(file.size)}`;
         } else {
             this.imageInfo.textContent = 'No image loaded';
@@ -174,7 +172,7 @@ export class UIManager {
         const imgElement = document.createElement('img');
         imgElement.src = imageData.url;
         this.imageContainer.appendChild(imgElement);
-        this.updateImageInfo(file, false, 0, imageData);
+        this.updateImageInfo(file);
     }
 
     displayMultipleImages(imagesData) {
