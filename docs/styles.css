@@ -763,7 +763,7 @@ input:checked + .slider:before {
 
 .image-loading::before {
     content: '\f1ce';
-    font-family: 'Font Awesome 6 Free';
+    font-family: 'Tradling';
     font-weight: 900;
     position: absolute;
     top: 50%;
