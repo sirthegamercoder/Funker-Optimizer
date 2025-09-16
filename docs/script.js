@@ -100,8 +100,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function initTheme() {
         const savedTheme = localStorage.getItem('theme') || 
-                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         setTheme(savedTheme);
+
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.content = savedTheme === 'dark' ? '#2d3748' : '#4a6bff';
+        }
     }
 
     function setTheme(theme) {
