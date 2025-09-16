@@ -80,9 +80,9 @@ After you have done the setup you should now need the following for this tool :
 ---
 
 ### Method 2 : (Terminal/CMD)
-1. Go to `src` folder and click at `Funker Optimizer.py` then click `Download raw file`
+1. Go to `src` folder and click at `Funker Optimizer.py` then click `Download raw file`. Don't forget `Download raw file` of `icon.ico`!
 > [!TIP]
-> If you have GitZip extension just hover over `Funker Optimizer.py` and hit the checkbox then download it
+> If you have GitZip extension just hover over `Funker Optimizer.py` and `icon.ico` then hit the checkbox and download it
 
 2. Wait for it to finish and press `Win+X` then select `Terminal`
 > [!TIP]
