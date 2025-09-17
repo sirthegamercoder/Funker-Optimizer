@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let progressInterval = null;
 
     function init() {
-        initTheme();
+        initAutomaticTheme();
         updateFileInputLabel();
         updateBatchFileInputLabel();
         setupEventListeners();
@@ -98,8 +98,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         cancelProcessBtn.addEventListener('click', cancelProcess);
 
-        themeSwitch.addEventListener('change', toggleTheme);
-
         zoomInBtn.addEventListener('click', () => adjustZoom(0.1));
         zoomOutBtn.addEventListener('click', () => adjustZoom(-0.1));
         resetZoomBtn.addEventListener('click', resetZoom);
@@ -108,20 +106,70 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#batch-modal .file-input-button').addEventListener('click', () => batchInputFiles.click());
     }
 
-    function initTheme() {
-        const savedTheme = localStorage.getItem('theme') || 
-                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        setTheme(savedTheme);
+    function initAutomaticTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        
+        if (savedTheme) {
+            applyTheme(savedTheme);
+            showThemeDetectionMessage(`Using your saved ${savedTheme} theme preference`);
+        } else {
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const systemTheme = systemPrefersDark ? 'dark' : 'light';
+            applyTheme(systemTheme);
+            showThemeDetectionMessage(`Automatically applied ${systemTheme} theme based on your system preference`);
+
+            localStorage.setItem('theme', systemTheme);
+        }
+
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        mediaQuery.addEventListener('change', handleSystemThemeChange);
     }
 
-    function setTheme(theme) {
+    function applyTheme(theme) {
         document.body.classList.toggle('dark-mode', theme === 'dark');
-        themeSwitch.checked = theme === 'dark';
-        localStorage.setItem('theme', theme);
+        updateThemeIndicator(theme);
+
+        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+        if (!themeColorMeta) {
+            const meta = document.createElement('meta');
+            meta.name = 'theme-color';
+            document.head.appendChild(meta);
+        }
+        
+        const themeColor = theme === 'dark' ? '#1a1a1a' : '#f8f9fa';
+        document.querySelector('meta[name="theme-color"]').content = themeColor;
     }
 
-    function toggleTheme() {
-        setTheme(themeSwitch.checked ? 'dark' : 'light');
+    function handleSystemThemeChange(e) {
+        if (!localStorage.getItem('theme')) {
+            const newTheme = e.matches ? 'dark' : 'light';
+            applyTheme(newTheme);
+            showThemeDetectionMessage(`Theme changed to ${newTheme} based on system preference`);
+
+            localStorage.setItem('theme', newTheme);
+        }
+    }
+
+    function showThemeDetectionMessage(message) {
+        const toast = document.getElementById('theme-detection-toast');
+        const messageElement = document.getElementById('theme-detection-message');
+        
+        if (toast && messageElement) {
+            messageElement.textContent = message;
+            toast.style.display = 'flex';
+
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 4000);
+        }
+    }
+
+    function updateThemeIndicator(theme) {
+        const indicator = document.getElementById('theme-indicator');
+        if (indicator) {
+            indicator.classList.remove('light-mode', 'dark-mode');
+            indicator.classList.add(`${theme}-mode`);
+        }
     }
 
     function handleDragOver(e) {

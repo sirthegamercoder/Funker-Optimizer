@@ -999,3 +999,49 @@ input:checked + .slider:before {
         transform: translateY(0);
     }
 }
+
+.theme-auto-detect {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 8px 12px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.theme-auto-detect i {
+    font-size: 14px;
+}
+
+.theme-auto-detect.light-mode {
+    color: #ffa500;
+}
+
+.theme-auto-detect.dark-mode {
+    color: #aaccff;
+}
+
+body, .card, input, select, textarea, button {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+    .system-theme-indicator::after {
+        content: "Dark";
+        color: #aaccff;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .system-theme-indicator::after {
+        content: "Light";
+        color: #ffa500;
+    }
+}
