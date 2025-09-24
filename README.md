@@ -1,4 +1,4 @@
-<img alt="Banner" src="art/Banner.png"/>
+<img alt="Banner" src="https://raw.githubusercontent.com/sirthegamercoder/Funker-Optimizer/refs/heads/main/art/Banner.png"/>
 
 # Funker' Optimizer 
 A tool that can optimize large spritesheet into small for Friday Night Funkin' (FNF). Is perfect if optimizing spritesheet using a PC, especially for you who are a optimizer using a PC.
