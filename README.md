@@ -114,6 +114,3 @@ After you have done the setup you should now need the following for this tool :
 ### GameBanana
 
 <a href="https://gamebanana.com/tools/19963"><img src="https://images.gamebanana.com/img/embeddables/Tool_19963_large.jpg?1749456793"/></a>
-
-### Web Version
-To use this tool, you can click [here](https://sirthegamercoder.github.io/Funker-Optimizer/)!
