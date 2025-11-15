@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funker Optimizer</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        :root {
+            --bg-color: #f0f0f0;
+            --text-color: #000000;
+            --section-bg: #ffffff;
+            --border-color: #cccccc;
+            --button-bg: #e0e0e0;
+            --button-hover: #d0d0d0;
+            --accent-color: #4a86e8;
+            --input-bg: #ffffff;
+            --checkbox-bg: #cccccc;
+            --message-bg: #f5f5f5;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #2e2e2e;
+            --text-color: #ffffff;
+            --section-bg: #3c3f41;
+            --border-color: #555555;
+            --button-bg: #444444;
+            --button-hover: #555555;
+            --accent-color: #4a86e8;
+            --input-bg: #3c3f41;
+            --checkbox-bg: #555555;
+            --message-bg: #2e2e2e;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .section {
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px var(--shadow);
+            transition: background-color 0.3s;
+        }
+
+        .section-title {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Consolas', monospace;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        @media (min-width: 480px) {
+            .button-group {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .button-group {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: var(--button-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .checkbox-group input {
+            margin-right: 8px;
+        }
+
+        .image-preview {
+            margin-top: 15px;
+            text-align: center;
+            border: 1px dashed var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+        }
+
+        .message-area {
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .file-label:hover {
+            background-color: var(--button-hover);
+        }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .status-message {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            background-color: var(--message-bg);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-color);
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .division-control {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .division-control label {
+            margin-right: 10px;
+            margin-bottom: 0;
+        }
+
+        .division-control input {
+            width: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h2 class="section-title">XML Processor</h2>
+            
+            <div class="form-group">
+                <label for="input-file">Input Data File:</label>
+                <input type="text" id="input-file" placeholder="No file selected" readonly>
+                <input type="file" id="input-file-select" class="file-input" accept=".xml">
+                <label for="input-file-select" class="file-label">Browse</label>
+            </div>
+            
+            <div class="form-group">
+                <label for="output-file">Output Data File Name:</label>
+                <input type="text" id="output-file" placeholder="Enter output file name">
+            </div>
+
+            <div class="division-control">
+                <label for="division-number">Division Factor:</label>
+                <input type="number" id="division-number" value="2" min="2" max="4">
+            </div>
+            
+            <div class="button-group">
+                <button id="batch-process">Batch Process XML</button>
+                <button id="modify-xml">Modify XML</button>
+                <button id="github-repo">GitHub Repo</button>
+                <button id="bug-report">Bug Report</button>
+                <button id="spritesheet-xml-generator">Spritesheet and XML Generator</button>
+            </div>
+            
+            <div class="message-area">
+                <label for="message-text">Messages:</label>
+                <textarea id="message-text" readonly></textarea>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">Image Processor</h2>
+            
+            <div class="form-group">
+                <input type="file" id="image-file-select" class="file-input" accept="image/png" multiple>
+                <label for="image-file-select" class="file-label">Load Image(s)</label>
+                <div class="file-info" id="image-file-info">No image loaded</div>
+            </div>
+            
+            <div class="image-preview" id="image-preview">
+                <p>Image preview will appear here</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="resize-percentage">Resize Percentage:</label>
+                <input type="number" id="resize-percentage" value="50" min="50" max="50">
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="aliasing-checkbox" checked>
+                <label for="aliasing-checkbox">Aliasing</label>
+            </div>
+            
+            <div class="button-group">
+                <button id="resize-image">Resize Image</button>
+            </div>
+            
+            <div class="status-message hidden" id="status-message"></div>
+            <div class="progress-bar hidden" id="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function detectSystemTheme() {
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        applyTheme(detectSystemTheme());
+
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                applyTheme(e.matches ? 'dark' : 'light');
+            });
+        }
+
+        const inputFile = document.getElementById('input-file');
+        const inputFileSelect = document.getElementById('input-file-select');
+        const outputFile = document.getElementById('output-file');
+        const messageText = document.getElementById('message-text');
+        const imageFileSelect = document.getElementById('image-file-select');
+        const imageFileInfo = document.getElementById('image-file-info');
+        const imagePreview = document.getElementById('image-preview');
+        const resizePercentage = document.getElementById('resize-percentage');
+        const aliasingCheckbox = document.getElementById('aliasing-checkbox');
+        const statusMessage = document.getElementById('status-message');
+        const progressBar = document.getElementById('progress-bar');
+        const progressFill = document.getElementById('progress-fill');
+        const divisionNumber = document.getElementById('division-number');
+
+        let loadedXMLFiles = [];
+        let loadedImages = [];
+
+        inputFileSelect.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                inputFile.value = this.files[0].name;
+                loadedXMLFiles = Array.from(this.files);
+                showMessage(`Loaded XML file: ${this.files[0].name}`);
+            }
+        });
+
+        imageFileSelect.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                loadedImages = Array.from(this.files);
+                
+                if (this.files.length === 1) {
+                    imageFileInfo.textContent = `Loaded: ${this.files[0].name}`;
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                    
+                    showMessage(`Image loaded: ${this.files[0].name}`);
+                } else {
+                    imageFileInfo.textContent = `Loaded ${this.files.length} images.`;
+                    imagePreview.innerHTML = `<p>Multiple images selected (${this.files.length})</p>`;
+                    showMessage(`Successfully loaded ${this.files.length} images.`);
+                }
+            } else {
+                imageFileInfo.textContent = 'No image loaded';
+                imagePreview.innerHTML = '<p>Image preview will appear here</p>';
+            }
+        });
+
+        function showMessage(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            messageText.value += `[${timestamp}] ${message}\n`;
+            messageText.scrollTop = messageText.scrollHeight;
+        }
+
+        function processXML(xmlContent, divisionFactor) {
+            try {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+
+                const subTextures = xmlDoc.getElementsByTagName("SubTexture");
+
+                for (let subTexture of subTextures) {
+                    const attributes = ['x', 'y', 'width', 'height', 'frameX', 'frameY', 'frameWidth', 'frameHeight'];
+
+                    attributes.forEach(attr => {
+                        const value = subTexture.getAttribute(attr);
+                        if (value !== null) {
+                            const numValue = parseInt(value, 10);
+                            if (!isNaN(numValue)) {
+                                subTexture.setAttribute(attr, Math.floor(numValue / divisionFactor).toString());
+                            }
+                        }
+                    });
+                }
+
+                const serializer = new XMLSerializer();
+                return serializer.serializeToString(xmlDoc);
+            } catch (error) {
+                throw new Error(`XML processing error: ${error.message}`);
+            }
+        }
+
+        function resizeImage(image, percentage, useAliasing) {
+            return new Promise((resolve, reject) => {
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    const newWidth = Math.floor(image.width * (percentage / 100));
+                    const newHeight = Math.floor(image.height * (percentage / 100));
+                    
+                    canvas.width = newWidth;
+                    canvas.height = newHeight;
+
+                    ctx.imageSmoothingEnabled = useAliasing;
+                    ctx.imageSmoothingQuality = useAliasing ? 'high' : 'low';
+
+                    ctx.drawImage(image, 0, 0, newWidth, newHeight);
+
+                    canvas.toBlob(blob => {
+                        if (blob) {
+                            resolve(blob);
+                        } else {
+                            reject(new Error('Failed to resize image'));
+                        }
+                    }, 'image/png');
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        document.getElementById('modify-xml').addEventListener('click', async function() {
+            if (loadedXMLFiles.length === 0) {
+                alert('Please select an input XML file.');
+                return;
+            }
+            
+            if (!outputFile.value) {
+                alert('Please enter an output file name.');
+                return;
+            }
+            
+            const divisionFactor = parseInt(divisionNumber.value);
+            if (isNaN(divisionFactor) || divisionFactor <= 0) {
+                alert('Please enter a valid division factor.');
+                return;
+            }
+            
+            statusMessage.textContent = 'Processing XML file...';
+            statusMessage.classList.remove('hidden');
+            
+            try {
+                const file = loadedXMLFiles[0];
+                const text = await file.text();
+                const processedXML = processXML(text, divisionFactor);
+
+                downloadFile(processedXML, outputFile.value.endsWith('.xml') ? outputFile.value : `${outputFile.value}.xml`, 'text/xml');
+                
+                statusMessage.textContent = 'XML file processed successfully!';
+                showMessage(`Modified Successfully.\nINPUT='${file.name}'\nOUTPUT='${outputFile.value}'`);
+                
+                setTimeout(() => {
+                    statusMessage.classList.add('hidden');
+                }, 3000);
+            } catch (error) {
+                statusMessage.textContent = `Error: ${error.message}`;
+                showMessage(`Error processing XML: ${error.message}`);
+            }
+        });
+
+        document.getElementById('batch-process').addEventListener('click', async function() {
+            const inputFiles = await new Promise(resolve => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.multiple = true;
+                input.accept = '.xml';
+                input.onchange = () => resolve(input.files);
+                input.click();
+            });
+            
+            if (!inputFiles || inputFiles.length === 0) return;
+            
+            const divisionFactor = parseInt(divisionNumber.value);
+            if (isNaN(divisionFactor) || divisionFactor <= 0) {
+                alert('Please enter a valid division factor.');
+                return;
+            }
+            
+            statusMessage.textContent = 'Processing XML files...';
+            statusMessage.classList.remove('hidden');
+            progressBar.classList.remove('hidden');
+            
+            let processedCount = 0;
+            const errors = [];
+            
+            for (let i = 0; i < inputFiles.length; i++) {
+                const file = inputFiles[i];
+                
+                try {
+                    const text = await file.text();
+                    const processedXML = processXML(text, divisionFactor);
+
+                    downloadFile(processedXML, file.name, 'text/xml');
+                    
+                    processedCount++;
+                    showMessage(`Processed: ${file.name}`);
+                } catch (error) {
+                    errors.push(`Error processing ${file.name}: ${error.message}`);
+                    showMessage(`Error processing ${file.name}: ${error.message}`);
+                }
+
+                progressFill.style.width = `${((i + 1) / inputFiles.length) * 100}%`;
+            }
+            
+            progressBar.classList.add('hidden');
+            progressFill.style.width = '0%';
+            
+            if (errors.length > 0) {
+                statusMessage.textContent = `Batch processing completed with ${errors.length} error(s).`;
+                showMessage(`Batch processing completed with ${errors.length} error(s).`);
+            } else {
+                statusMessage.textContent = `Batch processing completed successfully. Processed ${processedCount} files.`;
+                showMessage(`Batch XML processing completed successfully. Processed ${processedCount} files.`);
+            }
+            
+            setTimeout(() => {
+                statusMessage.classList.add('hidden');
+            }, 5000);
+        });
+
+        document.getElementById('resize-image').addEventListener('click', async function() {
+            if (loadedImages.length === 0) {
+                alert('Please select at least one image to resize.');
+                return;
+            }
+            
+            const percentage = parseFloat(resizePercentage.value);
+            if (isNaN(percentage) || percentage <= 0) {
+                alert('Please enter a valid resize percentage.');
+                return;
+            }
+            
+            const useAliasing = aliasingCheckbox.checked;
+            
+            statusMessage.textContent = 'Resizing image(s)...';
+            statusMessage.classList.remove('hidden');
+            progressBar.classList.remove('hidden');
+            
+            let processedCount = 0;
+            const errors = [];
+            
+            for (let i = 0; i < loadedImages.length; i++) {
+                const file = loadedImages[i];
+                
+                try {
+                    const img = new Image();
+                    const imageLoadPromise = new Promise((resolve, reject) => {
+                        img.onload = resolve;
+                        img.onerror = reject;
+                    });
+                    
+                    img.src = URL.createObjectURL(file);
+                    await imageLoadPromise;
+
+                    const resizedBlob = await resizeImage(img, percentage, useAliasing);
+
+                    const fileName = file.name.replace(/(\.\w+)$/);
+                    downloadFile(resizedBlob, fileName, 'image/png');
+                    
+                    processedCount++;
+                    showMessage(`Resized: ${file.name}`);
+
+                    URL.revokeObjectURL(img.src);
+                } catch (error) {
+                    errors.push(`Failed to process ${file.name}: ${error.message}`);
+                    showMessage(`Failed to process ${file.name}: ${error.message}`);
+                }
+
+                progressFill.style.width = `${((i + 1) / loadedImages.length) * 100}%`;
+            }
+            
+            progressBar.classList.add('hidden');
+            progressFill.style.width = '0%';
+            
+            if (errors.length > 0) {
+                statusMessage.textContent = `Image resizing completed with ${errors.length} error(s).`;
+                showMessage(`Image resizing completed with ${errors.length} error(s).`);
+            } else {
+                statusMessage.textContent = `Image resizing completed successfully. Processed ${processedCount} images.`;
+                showMessage(`Image resizing completed successfully. Processed ${processedCount} images.`);
+            }
+            
+            setTimeout(() => {
+                statusMessage.classList.add('hidden');
+            }, 5000);
+        });
+
+        document.getElementById('github-repo').addEventListener('click', function() {
+            window.open('https://github.com/sirthegamercoder/Funker-Optimizer', '_blank');
+        });
+
+        document.getElementById('bug-report').addEventListener('click', function() {
+            window.open('https://github.com/sirthegamercoder/Funker-Optimizer/issues', '_blank');
+        });
+
+        document.getElementById('spritesheet-xml-generator').addEventListener('click', function() {
+            window.open('https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web/', '_blank');
+        });
+    </script>
+</body>
+</html>
