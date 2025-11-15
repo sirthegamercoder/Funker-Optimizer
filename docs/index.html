@@ -18,6 +18,7 @@
             --checkbox-bg: #cccccc;
             --message-bg: #f5f5f5;
             --shadow: rgba(0, 0, 0, 0.1);
+            --drop-zone-active: #e3f2fd;
         }
 
         [data-theme="dark"] {
@@ -32,6 +33,7 @@
             --checkbox-bg: #555555;
             --message-bg: #2e2e2e;
             --shadow: rgba(0, 0, 0, 0.3);
+            --drop-zone-active: #2c3e50;
         }
 
         * {
@@ -244,6 +246,48 @@
         .division-control input {
             width: 60px;
         }
+
+        .drop-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            background-color: var(--section-bg);
+        }
+
+        .drop-zone.active {
+            border-color: var(--accent-color);
+            background-color: var(--drop-zone-active);
+        }
+
+        .drop-zone p {
+            margin-bottom: 10px;
+        }
+
+        .drop-zone-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--border-color);
+        }
+
+        .drop-zone.active .drop-zone-icon {
+            color: var(--accent-color);
+        }
+
+        .file-list {
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .file-item {
+            padding: 5px;
+            margin-bottom: 5px;
+            background-color: var(--message-bg);
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -256,6 +300,13 @@
                 <input type="text" id="input-file" placeholder="No file selected" readonly>
                 <input type="file" id="input-file-select" class="file-input" accept=".xml">
                 <label for="input-file-select" class="file-label">Browse</label>
+                
+                <div class="drop-zone" id="xml-drop-zone">
+                    <div class="drop-zone-icon">📁</div>
+                    <p>Drag & Drop XML files here</p>
+                    <p class="file-info">or click to select files</p>
+                    <div class="file-list" id="xml-file-list"></div>
+                </div>
             </div>
             
             <div class="form-group">
@@ -288,7 +339,13 @@
             <div class="form-group">
                 <input type="file" id="image-file-select" class="file-input" accept="image/png" multiple>
                 <label for="image-file-select" class="file-label">Load Image(s)</label>
-                <div class="file-info" id="image-file-info">No image loaded</div>
+                
+                <div class="drop-zone" id="image-drop-zone">
+                    <div class="drop-zone-icon">🖼️</div>
+                    <p>Drag & Drop images here</p>
+                    <p class="file-info">or click to select files</p>
+                    <div class="file-list" id="image-file-list"></div>
+                </div>
             </div>
             
             <div class="image-preview" id="image-preview">
@@ -347,13 +404,126 @@
         const progressFill = document.getElementById('progress-fill');
         const divisionNumber = document.getElementById('division-number');
 
+        const xmlDropZone = document.getElementById('xml-drop-zone');
+        const xmlFileList = document.getElementById('xml-file-list');
+        const imageDropZone = document.getElementById('image-drop-zone');
+        const imageFileList = document.getElementById('image-file-list');
+
         let loadedXMLFiles = [];
         let loadedImages = [];
+
+        function initDragAndDrop(dropZone, fileInput, fileList, fileType, onFilesLoaded) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+
+            dropZone.addEventListener('drop', handleDrop, false);
+
+            dropZone.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight() {
+                dropZone.classList.add('active');
+            }
+
+            function unhighlight() {
+                dropZone.classList.remove('active');
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+
+            function handleFiles(files) {
+                if (fileType === 'xml') {
+                    const xmlFiles = Array.from(files).filter(file => file.name.toLowerCase().endsWith('.xml'));
+                    
+                    if (xmlFiles.length === 0) {
+                        showMessage('No XML files found in the dropped files.');
+                        return;
+                    }
+
+                    loadedXMLFiles = xmlFiles;
+
+                    if (xmlFiles.length === 1) {
+                        inputFile.value = xmlFiles[0].name;
+                        fileList.innerHTML = `<div class="file-item">${xmlFiles[0].name}</div>`;
+                        showMessage(`Loaded XML file: ${xmlFiles[0].name}`);
+                    } else {
+                        inputFile.value = `${xmlFiles.length} XML files selected`;
+                        fileList.innerHTML = '';
+                        xmlFiles.forEach(file => {
+                            fileList.innerHTML += `<div class="file-item">${file.name}</div>`;
+                        });
+                        showMessage(`Loaded ${xmlFiles.length} XML files`);
+                    }
+                    
+                    if (onFilesLoaded) onFilesLoaded(xmlFiles);
+                } else if (fileType === 'image') {
+                    const imageFiles = Array.from(files).filter(file => 
+                        file.type.startsWith('image/')
+                    );
+                    
+                    if (imageFiles.length === 0) {
+                        showMessage('No image files found in the dropped files.');
+                        return;
+                    }
+
+                    loadedImages = imageFiles;
+
+                    fileList.innerHTML = '';
+                    imageFiles.forEach(file => {
+                        fileList.innerHTML += `<div class="file-item">${file.name}</div>`;
+                    });
+                    
+                    if (imageFiles.length === 1) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                        };
+                        reader.readAsDataURL(imageFiles[0]);
+                        showMessage(`Image loaded: ${imageFiles[0].name}`);
+                    } else {
+                        imagePreview.innerHTML = `<p>Multiple images selected (${imageFiles.length})</p>`;
+                        showMessage(`Successfully loaded ${imageFiles.length} images.`);
+                    }
+                    
+                    if (onFilesLoaded) onFilesLoaded(imageFiles);
+                }
+            }
+        }
+
+        initDragAndDrop(xmlDropZone, inputFileSelect, xmlFileList, 'xml');
+
+        initDragAndDrop(imageDropZone, imageFileSelect, imageFileList, 'image');
 
         inputFileSelect.addEventListener('change', function() {
             if (this.files.length > 0) {
                 inputFile.value = this.files[0].name;
                 loadedXMLFiles = Array.from(this.files);
+
+                xmlFileList.innerHTML = '';
+                Array.from(this.files).forEach(file => {
+                    xmlFileList.innerHTML += `<div class="file-item">${file.name}</div>`;
+                });
+                
                 showMessage(`Loaded XML file: ${this.files[0].name}`);
             }
         });
@@ -361,10 +531,13 @@
         imageFileSelect.addEventListener('change', function() {
             if (this.files.length > 0) {
                 loadedImages = Array.from(this.files);
+
+                imageFileList.innerHTML = '';
+                Array.from(this.files).forEach(file => {
+                    imageFileList.innerHTML += `<div class="file-item">${file.name}</div>`;
+                });
                 
                 if (this.files.length === 1) {
-                    imageFileInfo.textContent = `Loaded: ${this.files[0].name}`;
-
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
@@ -373,12 +546,11 @@
                     
                     showMessage(`Image loaded: ${this.files[0].name}`);
                 } else {
-                    imageFileInfo.textContent = `Loaded ${this.files.length} images.`;
                     imagePreview.innerHTML = `<p>Multiple images selected (${this.files.length})</p>`;
                     showMessage(`Successfully loaded ${this.files.length} images.`);
                 }
             } else {
-                imageFileInfo.textContent = 'No image loaded';
+                imageFileList.innerHTML = '';
                 imagePreview.innerHTML = '<p>Image preview will appear here</p>';
             }
         });
