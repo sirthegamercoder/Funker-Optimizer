@@ -764,7 +764,7 @@
 
                     const resizedBlob = await resizeImage(img, percentage, useAliasing);
 
-                    const fileName = file.name.replace(/(\.\w+)$/);
+                    const fileName = file.name;
                     downloadFile(resizedBlob, fileName, 'image/png');
                     
                     processedCount++;
