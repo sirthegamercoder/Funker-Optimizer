@@ -1,4 +1,4 @@
-'''
+"""
 MIT License
 
 Copyright (c) 2025 MTGC
@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-'''
+"""
 
 import os
 import sys
@@ -33,11 +33,16 @@ import webbrowser
 import winreg
 from tkinter import ttk
 
+
 class FunkerOptimizer:
     def __init__(self, root):
         self.root = root
         self.root.title("Funker' Optimizer")
-        self.root.iconbitmap(sys.executable)
+
+        script = os.path.dirname(__file__)
+        icon_app = os.path.join(script, 'icon.ico')
+
+        self.root.iconbitmap(default=icon_app)
         self.root.resizable(0, 0)
 
         window_width = 900
@@ -61,18 +66,32 @@ class FunkerOptimizer:
         self.left_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
         self.left_frame.grid_columnconfigure(1, weight=1)
 
-        self.input_label = tk.Label(self.left_frame, text="Input Data File:", font=("Segoe UI", 10, "bold"))
+        self.input_label = tk.Label(
+            self.left_frame, text="Input Data File:", font=("Segoe UI", 10, "bold")
+        )
         self.input_label.grid(row=0, column=0, padx=5, pady=5, sticky="e")
         self.input_entry = tk.Entry(self.left_frame, width=55, font=("Segoe UI", 10))
         self.input_entry.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
-        self.input_button = tk.Button(self.left_frame, text="Browse", command=self.browse_input, font=("Segoe UI", 10))
+        self.input_button = tk.Button(
+            self.left_frame,
+            text="Browse",
+            command=self.browse_input,
+            font=("Segoe UI", 10),
+        )
         self.input_button.grid(row=0, column=2, padx=5, pady=5)
 
-        self.output_label = tk.Label(self.left_frame, text="Output Data File:", font=("Segoe UI", 10, "bold"))
+        self.output_label = tk.Label(
+            self.left_frame, text="Output Data File:", font=("Segoe UI", 10, "bold")
+        )
         self.output_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
         self.output_entry = tk.Entry(self.left_frame, width=55, font=("Segoe UI", 10))
         self.output_entry.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
-        self.output_button = tk.Button(self.left_frame, text="Browse", command=self.browse_output, font=("Segoe UI", 10))
+        self.output_button = tk.Button(
+            self.left_frame,
+            text="Browse",
+            command=self.browse_output,
+            font=("Segoe UI", 10),
+        )
         self.output_button.grid(row=1, column=2, padx=5, pady=5)
 
         self.button_frame = tk.Frame(self.left_frame)
@@ -81,23 +100,54 @@ class FunkerOptimizer:
         self.button_frame.grid_columnconfigure(1, weight=1)
         self.button_frame.grid_columnconfigure(2, weight=1)
 
-        self.batch_process_button = tk.Button(self.button_frame, text="Batch Process XML", command=self.batch_process, font=("Segoe UI", 10))
+        self.batch_process_button = tk.Button(
+            self.button_frame,
+            text="Batch Process XML",
+            command=self.batch_process,
+            font=("Segoe UI", 10),
+        )
         self.batch_process_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
-        self.modify_button = tk.Button(self.button_frame, text="Modify XML", command=self.modify, font=("Segoe UI", 10))
+        self.modify_button = tk.Button(
+            self.button_frame,
+            text="Modify XML",
+            command=self.modify,
+            font=("Segoe UI", 10),
+        )
         self.modify_button.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
 
-        self.github_button = tk.Button(self.button_frame, text="GitHub Repo", command=self.open_github_repo, font=("Segoe UI", 10))
+        self.github_button = tk.Button(
+            self.button_frame,
+            text="GitHub Repo",
+            command=self.open_github_repo,
+            font=("Segoe UI", 10),
+        )
         self.github_button.grid(row=0, column=2, padx=5, pady=5, sticky="ew")
 
-        self.bug_report_button = tk.Button(self.button_frame, text="Bug Report", command=self.bug_report, font=("Segoe UI", 10))
+        self.bug_report_button = tk.Button(
+            self.button_frame,
+            text="Bug Report",
+            command=self.bug_report,
+            font=("Segoe UI", 10),
+        )
         self.bug_report_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
-        self.spritesheet_and_xml_generator_button = tk.Button(self.button_frame, text="Spritesheet and XML Generator", command=self.spritesheet_and_xml_generator, font=("Segoe UI", 10))
-        self.spritesheet_and_xml_generator_button.grid(row=1, column=1, columnspan=2, padx=5, pady=5, sticky="ew")
+        self.spritesheet_and_xml_generator_button = tk.Button(
+            self.button_frame,
+            text="Spritesheet and XML Generator",
+            command=self.spritesheet_and_xml_generator,
+            font=("Segoe UI", 10),
+        )
+        self.spritesheet_and_xml_generator_button.grid(
+            row=1, column=1, columnspan=2, padx=5, pady=5, sticky="ew"
+        )
 
-        self.message_text = tk.Text(self.left_frame, height=8, state='disabled', font=("Consolas", 10))
-        self.message_text.grid(row=3, column=0, columnspan=3, padx=5, pady=10, sticky="nsew")
+        self.message_text = tk.Text(
+            self.left_frame, height=8, state="disabled", font=("Consolas", 10)
+        )
+        self.message_text.grid(
+            row=3, column=0, columnspan=3, padx=5, pady=10, sticky="nsew"
+        )
         self.left_frame.grid_rowconfigure(3, weight=1)
 
         self.right_frame = tk.Frame(self.main_frame, relief=tk.RIDGE, borderwidth=2)
@@ -108,18 +158,39 @@ class FunkerOptimizer:
         self.loaded_images = []
         self.image_label = None
 
-        self.load_image_button = tk.Button(self.right_frame, text="Load Image", command=self.browse_image, font=("Segoe UI", 10))
-        self.load_image_button.grid(row=0, column=0, padx=10, pady=(20,10), sticky="ew")
+        self.load_image_button = tk.Button(
+            self.right_frame,
+            text="Load Image",
+            command=self.browse_image,
+            font=("Segoe UI", 10),
+        )
+        self.load_image_button.grid(
+            row=0, column=0, padx=10, pady=(20, 10), sticky="ew"
+        )
 
-        self.resize_button = tk.Button(self.right_frame, text="Resize Image", command=self.resize, font=("Segoe UI", 10))
+        self.resize_button = tk.Button(
+            self.right_frame,
+            text="Resize Image",
+            command=self.resize,
+            font=("Segoe UI", 10),
+        )
         self.resize_button.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
 
         self.aliasing_var = tk.BooleanVar(value=True)
-        self.aliasing_checkbox = tk.Checkbutton(self.right_frame, text="Aliasing", variable=self.aliasing_var, font=("Segoe UI", 10))
-        self.aliasing_checkbox.grid(row=3, column=0, padx=10, pady=(10,20), sticky="w")
+        self.aliasing_checkbox = tk.Checkbutton(
+            self.right_frame,
+            text="Aliasing",
+            variable=self.aliasing_var,
+            font=("Segoe UI", 10),
+        )
+        self.aliasing_checkbox.grid(row=3, column=0, padx=10, pady=(10, 20), sticky="w")
 
-        self.image_file_display_label = tk.Label(self.right_frame, text="No image loaded", font=("Segoe UI", 9, "italic"))
-        self.image_file_display_label.grid(row=4, column=0, padx=10, pady=(0,10), sticky="ew")
+        self.image_file_display_label = tk.Label(
+            self.right_frame, text="No image loaded", font=("Segoe UI", 9, "italic")
+        )
+        self.image_file_display_label.grid(
+            row=4, column=0, padx=10, pady=(0, 10), sticky="ew"
+        )
 
         self.apply_system_theme()
 
@@ -156,30 +227,64 @@ class FunkerOptimizer:
         self.button_frame.configure(bg=bg_color)
 
         widgets = [
-            self.input_label, self.input_entry, self.input_button,
-            self.output_label, self.output_entry, self.output_button,
-            self.modify_button, self.github_button, self.bug_report_button,
-            self.spritesheet_and_xml_generator_button, self.message_text,
-            self.load_image_button, self.resize_button,
-            self.aliasing_checkbox, self.batch_process_button, self.image_file_display_label
+            self.input_label,
+            self.input_entry,
+            self.input_button,
+            self.output_label,
+            self.output_entry,
+            self.output_button,
+            self.modify_button,
+            self.github_button,
+            self.bug_report_button,
+            self.spritesheet_and_xml_generator_button,
+            self.message_text,
+            self.load_image_button,
+            self.resize_button,
+            self.aliasing_checkbox,
+            self.batch_process_button,
+            self.image_file_display_label,
         ]
 
         for widget in widgets:
             if isinstance(widget, tk.Label):
                 widget.configure(bg=bg_color, fg=fg_color)
             elif isinstance(widget, tk.Entry):
-                widget.configure(bg=entry_bg, fg=fg_color, insertbackground=fg_color, relief=tk.FLAT, bd=1)
+                widget.configure(
+                    bg=entry_bg,
+                    fg=fg_color,
+                    insertbackground=fg_color,
+                    relief=tk.FLAT,
+                    bd=1,
+                )
             elif isinstance(widget, tk.Button):
-                widget.configure(bg=button_bg, fg=fg_color, activebackground=button_bg, relief=tk.RAISED, bd=2)
+                widget.configure(
+                    bg=button_bg,
+                    fg=fg_color,
+                    activebackground=button_bg,
+                    relief=tk.RAISED,
+                    bd=2,
+                )
             elif isinstance(widget, tk.Text):
-                widget.configure(bg=entry_bg, fg=fg_color, insertbackground=fg_color, relief=tk.SUNKEN, bd=2)
+                widget.configure(
+                    bg=entry_bg,
+                    fg=fg_color,
+                    insertbackground=fg_color,
+                    relief=tk.SUNKEN,
+                    bd=2,
+                )
             elif isinstance(widget, tk.Checkbutton):
-                widget.configure(bg=bg_color, fg=fg_color, activebackground=button_bg, selectcolor=checkbox_indicator, relief=tk.FLAT)
+                widget.configure(
+                    bg=bg_color,
+                    fg=fg_color,
+                    activebackground=button_bg,
+                    selectcolor=checkbox_indicator,
+                    relief=tk.FLAT,
+                )
 
     def browse_input(self):
         file_path = filedialog.askopenfilename(
             title="Select Input Data File",
-            filetypes=[("XML files", "*.xml"), ("All files", "*.*")]
+            filetypes=[("XML files", "*.xml"), ("All files", "*.*")],
         )
         if file_path:
             self.input_entry.delete(0, tk.END)
@@ -189,11 +294,25 @@ class FunkerOptimizer:
         file_path = filedialog.asksaveasfilename(
             title="Select Output Data File",
             defaultextension=".xml",
-            filetypes=[("XML files", "*.xml"), ("All files", "*.*")]
+            filetypes=[("XML files", "*.xml"), ("All files", "*.*")],
         )
         if file_path:
             self.output_entry.delete(0, tk.END)
             self.output_entry.insert(0, file_path)
+
+    def smart_divide(self, value, attr):
+        try:
+            result = int(value) / self.division_number
+
+            if attr in ["x", "y", "frameX", "frameY"]:
+                result = round(result * 2) / 2
+                return str(int(result)) if result.is_integer() else str(result)
+            else:
+                result = round(result)
+                result = max(1, result)
+                return str(int(result))
+        except Exception as e:
+            return str(int(value) // self.division_number)
 
     def modify(self):
         input_path = self.input_entry.get()
@@ -203,22 +322,36 @@ class FunkerOptimizer:
             messagebox.showerror("Error", "Please select a valid input data file.")
             return
         if not output_path:
-            messagebox.showerror("Error", "Please select a valid output data file path.")
+            messagebox.showerror(
+                "Error", "Please select a valid output data file path."
+            )
             return
 
         try:
             tree = etree.parse(input_path)
             root = tree.getroot()
-            subtextures = tree.xpath('//SubTexture')
+            subtextures = tree.xpath("//SubTexture")
 
-            for teste in subtextures:
-                for attr in ['x', 'y', 'width', 'height', 'frameX', 'frameY', 'frameWidth', 'frameHeight']:
-                    value = teste.get(attr)
+            for subtexture in subtextures:
+                for attr in [
+                    "x",
+                    "y",
+                    "width",
+                    "height",
+                    "frameX",
+                    "frameY",
+                    "frameWidth",
+                    "frameHeight",
+                ]:
+                    value = subtexture.get(attr)
                     if value is not None:
-                        teste.set(attr, str(int(value) // self.division_number))
+                        new_value = self.smart_divide(value, attr)
+                        subtexture.set(attr, new_value)
 
-            tree.write(output_path, encoding='utf-8', xml_declaration=True)
-            self.show_message(f"Modified Successfully.\nINPUT='{os.path.abspath(input_path)}'\nOUTPUT='{os.path.abspath(output_path)}'")
+            tree.write(output_path, encoding="utf-8", xml_declaration=True)
+            self.show_message(
+                f"Modified Successfully.\nINPUT='{os.path.abspath(input_path)}'\nOUTPUT='{os.path.abspath(output_path)}'"
+            )
 
         except Exception as e:
             messagebox.showerror("Error", f"An unexpected error occurred:\n{e}")
@@ -226,7 +359,7 @@ class FunkerOptimizer:
     def batch_process(self):
         input_files = filedialog.askopenfilenames(
             title="Select Data Files",
-            filetypes=[("XML files", "*.xml"), ("All files", "*.*")]
+            filetypes=[("XML files", "*.xml"), ("All files", "*.*")],
         )
         if not input_files:
             return
@@ -243,17 +376,27 @@ class FunkerOptimizer:
                     continue
 
                 tree = etree.parse(input_path)
-                subtextures = tree.xpath('//SubTexture')
+                subtextures = tree.xpath("//SubTexture")
 
-                for teste in subtextures:
-                    for attr in ['x', 'y', 'width', 'height', 'frameX', 'frameY', 'frameWidth', 'frameHeight']:
-                        value = teste.get(attr)
+                for subtexture in subtextures:
+                    for attr in [
+                        "x",
+                        "y",
+                        "width",
+                        "height",
+                        "frameX",
+                        "frameY",
+                        "frameWidth",
+                        "frameHeight",
+                    ]:
+                        value = subtexture.get(attr)
                         if value is not None:
-                            teste.set(attr, str(int(value) // self.division_number))
+                            new_value = self.smart_divide(value, attr)
+                            subtexture.set(attr, new_value)
 
                 base_name = os.path.basename(input_path)
                 output_path = os.path.join(output_dir, base_name)
-                tree.write(output_path, encoding='utf-8', xml_declaration=True)
+                tree.write(output_path, encoding="utf-8", xml_declaration=True)
 
             except Exception as e:
                 errors.append(f"Error processing {input_path}: {e}")
@@ -261,19 +404,21 @@ class FunkerOptimizer:
         if errors:
             messagebox.showerror("Batch Processing Errors", "\n".join(errors))
         else:
-            messagebox.showinfo("Batch Processing", "Batch processing completed successfully.")
+            messagebox.showinfo(
+                "Batch Processing", "Batch processing completed successfully."
+            )
             self.show_message("Batch XML processing completed successfully.")
 
     def show_message(self, message):
-        self.message_text.config(state='normal')
+        self.message_text.config(state="normal")
         self.message_text.delete(1.0, tk.END)
         self.message_text.insert(tk.END, message)
-        self.message_text.config(state='disabled')
+        self.message_text.config(state="disabled")
 
     def browse_image(self):
         response = messagebox.askyesno(
             "Load Image Option",
-            "Do you want to load a single image (Yes) or multiple images (No)?"
+            "Do you want to load a single image (Yes) or multiple images (No)?",
         )
         if response:
             self.browse_single_image()
@@ -283,7 +428,7 @@ class FunkerOptimizer:
     def browse_single_image(self):
         file_path = filedialog.askopenfilename(
             title="Select Image File",
-            filetypes=[("Image files", "*.png"), ("All files", "*.*")]
+            filetypes=[("Image files", "*.png"), ("All files", "*.*")],
         )
         if file_path:
             try:
@@ -300,7 +445,7 @@ class FunkerOptimizer:
     def browse_multiple_images(self):
         file_paths = filedialog.askopenfilenames(
             title="Select Image Files",
-            filetypes=[("Image files", "*.png"), ("All files", "*.*")]
+            filetypes=[("Image files", "*.png"), ("All files", "*.*")],
         )
         if file_paths:
             self.loaded_images = []
@@ -314,10 +459,14 @@ class FunkerOptimizer:
                     loaded_images_count += 1
                 except Exception as e:
                     failed_to_load.append(f"{os.path.basename(file_path)}: {e}")
-                    self.show_message(f"Failed to open {os.path.basename(file_path)}: {e}")
+                    self.show_message(
+                        f"Failed to open {os.path.basename(file_path)}: {e}"
+                    )
 
             if loaded_images_count > 0:
-                self.image_file_display_label.config(text=f"Loaded {loaded_images_count} images.")
+                self.image_file_display_label.config(
+                    text=f"Loaded {loaded_images_count} images."
+                )
                 self.show_message(f"Successfully loaded {loaded_images_count} images.")
                 self.image = None
             else:
@@ -332,7 +481,7 @@ class FunkerOptimizer:
     def resize(self):
         response = messagebox.askyesno(
             "Resize Option",
-            "Do you want to resize the currently loaded single image (Yes) or resize multiple images (No)?"
+            "Do you want to resize the currently loaded single image (Yes) or resize multiple images (No)?",
         )
         if response:
             self.resize_single_image()
@@ -340,11 +489,13 @@ class FunkerOptimizer:
             self.resize_multiple_images()
 
     def resize_single_image(self):
-        if not (hasattr(self, 'image') and self.image):
+        if not (hasattr(self, "image") and self.image):
             messagebox.showwarning("Warning", "No single image loaded to resize.")
             return
 
-        percentage_str = tk.simpledialog.askstring("Resize Image", "Enter resize percentage (e.g. 50):")
+        percentage_str = tk.simpledialog.askstring(
+            "Resize Image", "Enter resize percentage (e.g. 50):"
+        )
         if percentage_str is None:
             return
         try:
@@ -352,7 +503,9 @@ class FunkerOptimizer:
             if percentage <= 0:
                 raise ValueError("Percentage must be positive.")
         except Exception as e:
-            messagebox.showerror("Invalid Input", f"Please enter a valid positive number.\n{e}")
+            messagebox.showerror(
+                "Invalid Input", f"Please enter a valid positive number.\n{e}"
+            )
             return
 
         original_width, original_height = self.image.size
@@ -374,12 +527,14 @@ class FunkerOptimizer:
         save_path = filedialog.asksaveasfilename(
             title="Save Resized Image",
             defaultextension=".png",
-            filetypes=[("PNG files", "*.png"), ("All files", "*.*")]
+            filetypes=[("PNG files", "*.png"), ("All files", "*.*")],
         )
         if save_path:
             try:
                 self.image.save(save_path)
-                self.show_message(f"Resized image saved successfully:\n{os.path.abspath(save_path)}")
+                self.show_message(
+                    f"Resized image saved successfully:\n{os.path.abspath(save_path)}"
+                )
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to save image:\n{e}")
 
@@ -388,7 +543,9 @@ class FunkerOptimizer:
             messagebox.showwarning("Warning", "No images loaded for batch resizing.")
             return
 
-        percentage_str = tk.simpledialog.askstring("Resize Image", "Enter resize percentage (e.g. 50):")
+        percentage_str = tk.simpledialog.askstring(
+            "Resize Image", "Enter resize percentage (e.g. 50):"
+        )
         if percentage_str is None:
             return
         try:
@@ -396,10 +553,14 @@ class FunkerOptimizer:
             if percentage <= 0:
                 raise ValueError("Percentage must be positive.")
         except Exception as e:
-            messagebox.showerror("Invalid Input", f"Please enter a valid positive number.\n{e}")
+            messagebox.showerror(
+                "Invalid Input", f"Please enter a valid positive number.\n{e}"
+            )
             return
 
-        output_dir = filedialog.askdirectory(title="Select Output Directory for Resized Images")
+        output_dir = filedialog.askdirectory(
+            title="Select Output Directory for Resized Images"
+        )
         if not output_dir:
             return
 
@@ -425,13 +586,16 @@ class FunkerOptimizer:
                 errors.append(f"Failed to process {os.path.basename(file_path)}: {e}")
 
         if errors:
-            error_message = "Image resizing completed with errors:\n" + "\n".join(errors)
+            error_message = "Image resizing completed with errors:\n" + "\n".join(
+                errors
+            )
             messagebox.showerror("Image Resizing Errors", error_message)
             self.show_message(error_message)
         else:
-            messagebox.showinfo("Image Resizing", "Image resizing completed successfully.")
+            messagebox.showinfo(
+                "Image Resizing", "Image resizing completed successfully."
+            )
             self.show_message("Image resizing completed successfully.")
-
 
     def open_github_repo(self):
         url = "https://github.com/sirthegamercoder/Funker-Optimizer"
@@ -445,7 +609,8 @@ class FunkerOptimizer:
         url = "https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web/"
         webbrowser.open(url)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     root = tk.Tk()
     app = FunkerOptimizer(root)
     root.mainloop()
