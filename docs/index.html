@@ -352,7 +352,7 @@
             
             <div class="form-group">
                 <label for="resize-percentage">Resize Percentage:</label>
-                <input type="number" id="resize-percentage" value="50" readonly>
+                <input type="number" id="resize-percentage" value="50" min="1" max="1000">
             </div>
             
             <div class="checkbox-group">
@@ -409,6 +409,23 @@
 
         let loadedXMLFiles = [];
         let loadedImages = [];
+
+        function smartDivide(value, attr, divisionNumber) {
+            try {
+                let result = parseInt(value) / divisionNumber;
+
+                if (["x", "y", "frameX", "frameY"].includes(attr)) {
+                    result = Math.round(result * 2) / 2;
+                    return result % 1 === 0 ? Math.floor(result).toString() : result.toString();
+                } else {
+                    result = Math.round(result);
+                    result = Math.max(1, result);
+                    return Math.floor(result).toString();
+                }
+            } catch (e) {
+                return Math.floor(parseInt(value) / divisionNumber).toString();
+            }
+        }
 
         function initDragAndDrop(dropZone, fileInput, fileList, fileType, onFilesLoaded) {
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -574,7 +591,8 @@
                         if (value !== null) {
                             const numValue = parseInt(value, 10);
                             if (!isNaN(numValue)) {
-                                subTexture.setAttribute(attr, Math.floor(numValue / divisionFactor).toString());
+                                const newValue = smartDivide(numValue, attr, divisionFactor);
+                                subTexture.setAttribute(attr, newValue);
                             }
                         }
                     });
